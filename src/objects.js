@@ -1102,8 +1102,8 @@ SpriteMorph.prototype.initBlocks = function () {
         reportDifference: {
             type: 'reporter',
             category: 'operators',
-            spec: '%n - %n' // '%n \u2212 %n'
-            //alias: '-'
+            spec: '%n \u2212 %n',
+	    alias: '-'
         },
         reportProduct: {
             type: 'reporter',
@@ -1114,7 +1114,7 @@ SpriteMorph.prototype.initBlocks = function () {
         reportQuotient: {
             type: 'reporter',
             category: 'operators',
-            spec: '%n \u00F7 %n',
+            spec: '%n ÷ %n',
             alias: '/'
         },
         reportRound: {
