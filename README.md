@@ -1,5 +1,5 @@
 ![Snap! Logo](src/snap_logo_sm.png)
-# Snap<em>!</em> Build Your Own Blocks
+# Text-Based Snap<em>!</em>
 
 [https://snap.berkeley.edu][snap]
 
@@ -8,13 +8,13 @@
 a visual, blocks based programming language
 inspired by Scratch
 
-written by Jens Mönig and Brian Harvey
-jens@moenig.org, bh@cs.berkeley.edu
+written by Jens Mönig, Brian Harvey, and WarpedWartWars
+jens@moenig.org, bh@cs.berkeley.edu, *none yet*
 
-## Snap<em>!</em> Community
+## Text-Based Snap<em>!</em> Community
 
-This repository contains the source code for Snap<em>!</em> IDE. If you have
-questions about using Snap<em>!</em>, please [checkout the Snap! Forum][forum].
+This repository contains the source code for the text-based mod of the Snap<em>!</em> IDE. If you have
+questions about using Text-Based Snap<em>!</em>, please [checkout the Snap! Forum topic for this mod][forum].
 
 We also maintain an active community at [snap.berkeley.edu][snap],
 where you can save and share your own projects. You can also
@@ -22,7 +22,7 @@ where you can save and share your own projects. You can also
 
 [snap]: https://snap.berkeley.edu
 [snapcloud]: https://github.com/snap-cloud/snapCloud
-[forum]: https://forum.snap.berkeley.edu
+[forum]: https://forum.snap.berkeley.edu/t/a-snap-mod-idea-part-1/8375
 
 ## Security
 
@@ -30,7 +30,7 @@ If you have security concerns, please do not post them publicly.
 Please reach out to us at [contact@snap.berkeley.edu](mailto:contact@snap.berkeley.edu).
 
 ## License
-Copyright (C) 2008-2021 by Jens Mönig and Brian Harvey
+Copyright (C) 2008-2021 by Jens Mönig, Brian Harvey, and WarpedWartWars
 
 Snap! is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
