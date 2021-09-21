@@ -915,7 +915,7 @@ SpriteMorph.prototype.initBlocks = function () {
             defaults: [['next']]
         },
 
-        // Sensing
+        // IO
         reportTouchingObject: {
             only: SpriteMorph,
             type: 'predicate',
@@ -1543,13 +1543,13 @@ SpriteMorph.prototype.initBlocks = function () {
         // Video motion
         doSetVideoTransparency: {
             type: 'command',
-            category: 'sensing',
+            category: 'IO',
             spec: 'set video transparency to %n',
             defaults: [50]
         },
         reportVideo: {
             type: 'reporter',
-            category: 'sensing',
+            category: 'IO',
             spec: 'video %vid on %self',
             defaults: [['motion'], ['myself']]
         }
@@ -9676,7 +9676,7 @@ SpriteBubbleMorph.prototype.init = function (
         sprite.bubbleColor,
         null,
         null,
-        isQuestion ? sprite.blockColor.sensing : sprite.bubbleBorderColor,
+        isQuestion ? sprite.blockColor.IO : sprite.bubbleBorderColor,
         null,
         isThought,
         true // no shadow
@@ -12136,7 +12136,7 @@ StagePrompterMorph.prototype.init = function (question) {
         this,
         SyntaxElementMorph.prototype.rounding,
         SpriteMorph.prototype.bubbleBorder,
-        SpriteMorph.prototype.blockColor.sensing
+        SpriteMorph.prototype.blockColor.IO
     );
 
     // override inherited behavior
