@@ -137,10 +137,10 @@ SpriteMorph.prototype.attributes =
 
 SpriteMorph.prototype.categories =
     [
-        'motion',
+        /*'motion',
         'looks',
         'sound',
-        'pen',
+        'pen',*/
         'control',
         'sensing',
         'operators',
@@ -1102,8 +1102,8 @@ SpriteMorph.prototype.initBlocks = function () {
         reportDifference: {
             type: 'reporter',
             category: 'operators',
-            spec: '%n \u2212 %n',
-            alias: '-'
+            spec: '%n - %n' // '%n \u2212 %n'
+            //alias: '-'
         },
         reportProduct: {
             type: 'reporter',
@@ -1114,7 +1114,8 @@ SpriteMorph.prototype.initBlocks = function () {
         reportQuotient: {
             type: 'reporter',
             category: 'operators',
-            spec: '%n / %n' // '%n \u00F7 %n'
+            spec: '%n \u00F7 %n',
+            alias: '/'
         },
         reportRound: {
             type: 'reporter',
@@ -1245,7 +1246,7 @@ SpriteMorph.prototype.initBlocks = function () {
             type: 'reporter',
             category: 'operators',
             spec: 'unicode %n as letter',
-            defaults: [65]
+            defaults: [97]
         },
         reportIsA: {
             type: 'predicate',
@@ -1410,15 +1411,15 @@ SpriteMorph.prototype.initBlocks = function () {
             spec: 'numbers from %n to %n',
             defaults: [1, 10]
         },
-    /*
-        reportListCombination: { // currently not in use
+    
+        reportListCombination: {
             type: 'reporter',
             category: 'lists',
             spec: '%mlfunc %lists',
             defaults: [['append']]
         },
-    */
-        reportConcatenatedLists: {
+    
+        reportConcatenatedLists: { //deprecated
             type: 'reporter',
             category: 'lists',
             spec: 'append %lists'
@@ -1434,14 +1435,14 @@ SpriteMorph.prototype.initBlocks = function () {
             spec: 'reshape %l to %nums',
             defaults: [null, [4, 3]]
         },
-    /*
-        reportSlice: { // currently not in use
+    
+        reportSlice: {
             type: 'reporter',
             category: 'lists',
             spec: 'slice %l by %nums',
             defaults: [null, [2, -1]]
         },
-    */
+    
 
         // HOFs
         reportMap: {
@@ -1655,7 +1656,12 @@ SpriteMorph.prototype.initBlockMigrations = function () {
             selector: 'reportListAttribute',
             inputs: [['length']],
             offset: 1
-        }
+        },
+	reportConcatenatedLists: {
+	    selector: 'reportListCombination',
+	    inputs: [['append']],
+	    offset: 1
+	}
     };
 };
 
@@ -1738,8 +1744,8 @@ SpriteMorph.prototype.blockAlternatives = {
         ['doForEach', 2]],
     doFor: [['doForever', -3], ['doRepeat', -2], ['doUntil', -2],
         ['doForEach', -1]],
-    // doRun: ['fork'],
-    // fork: ['doRun'],
+    doRun: ['fork'],
+    fork: ['doRun'],
 
     // sensing:
     doAsk: ['bubble', 'doThink', 'doSayFor', 'doThinkFor'],
@@ -2724,8 +2730,9 @@ SpriteMorph.prototype.blockTemplates = function (category = 'motion') {
         blocks.push('-');
         blocks.push(block('doForEach'));
         blocks.push('-');
-        blocks.push(block('reportConcatenatedLists'));
+        blocks.push(block('reportListCombination'));
         blocks.push(block('reportReshape'));
+	blocks.push(block('reportSlice'));
         blocks.push('-');
         blocks.push(block('doAddToList'));
         blocks.push(block('doDeleteFromList'));
