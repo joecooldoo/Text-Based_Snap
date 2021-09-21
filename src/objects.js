@@ -8773,7 +8773,7 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
         blocks.push('-');
         blocks.push(block('doPauseAll'));
 
-    } else if (category === 'sensing') {
+    } else if (category === 'IO') {
 
         blocks.push(block('doAsk'));
         blocks.push(watcherToggle('getLastAnswer'));
