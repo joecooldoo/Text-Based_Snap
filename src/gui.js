@@ -3483,7 +3483,7 @@ IDE_Morph.prototype.snapMenu = function () {
     menu.addItem(
         'Download source',
         () => window.open(
-                'https://github.com/jmoenig/Snap/releases/latest',
+                'https://github.com/WarpedWartWars/Text-Based_Snap/releases/latest',
                 'SnapSource'
             )
     );
