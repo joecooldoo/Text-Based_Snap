@@ -142,7 +142,7 @@ SpriteMorph.prototype.categories =
         'sound',
         'pen',*/
         'control',
-        'sensing',
+        'IO',
         'operators',
         'variables',
         'lists',
@@ -155,7 +155,7 @@ SpriteMorph.prototype.blockColor = {
     sound : new Color(207, 74, 217),
     pen : new Color(0, 161, 120),
     control : new Color(230, 168, 34),
-    sensing : new Color(4, 148, 220),
+    IO : new Color(4, 148, 220),
     operators : new Color(98, 194, 19),
     variables : new Color(243, 118, 29),
     lists : new Color(217, 77, 17),
@@ -919,158 +919,158 @@ SpriteMorph.prototype.initBlocks = function () {
         reportTouchingObject: {
             only: SpriteMorph,
             type: 'predicate',
-            category: 'sensing',
+            category: 'IO',
             spec: 'touching %col ?',
             defaults: [['mouse-pointer']]
         },
         reportTouchingColor: {
             only: SpriteMorph,
             type: 'predicate',
-            category: 'sensing',
+            category: 'IO',
             spec: 'touching %clr ?'
         },
         reportColorIsTouchingColor: {
             only: SpriteMorph,
             type: 'predicate',
-            category: 'sensing',
+            category: 'IO',
             spec: 'color %clr is touching %clr ?'
         },
         reportAspect: {
             type: 'reporter',
-            category: 'sensing',
+            category: 'IO',
             spec: '%asp at %loc',
             defaults: [['hue'], ['mouse-pointer']]
         },
         reportStackSize: {
             dev: true,
             type: 'reporter',
-            category: 'sensing',
+            category: 'IO',
             spec: 'stack size'
         },
         reportFrameCount: {
             dev: true,
             type: 'reporter',
-            category: 'sensing',
+            category: 'IO',
             spec: 'frames'
         },
         reportYieldCount: {
             dev: true,
             type: 'reporter',
-            category: 'sensing',
+            category: 'IO',
             spec: 'yields'
         },
         reportThreadCount: {
             dev: true,
             type: 'reporter',
-            category: 'sensing',
+            category: 'IO',
             spec: 'processes'
         },
         doAsk: {
             type: 'command',
-            category: 'sensing',
+            category: 'IO',
             spec: 'ask %s and wait',
             defaults: [localize('what\'s your name?')]
         },
         reportLastAnswer: { // retained for legacy compatibility
             dev: true,
             type: 'reporter',
-            category: 'sensing',
+            category: 'IO',
             spec: 'answer'
         },
         getLastAnswer: {
             type: 'reporter',
-            category: 'sensing',
+            category: 'IO',
             spec: 'answer'
         },
         reportMouseX: {
             type: 'reporter',
-            category: 'sensing',
+            category: 'IO',
             spec: 'mouse x'
         },
         reportMouseY: {
             type: 'reporter',
-            category: 'sensing',
+            category: 'IO',
             spec: 'mouse y'
         },
         reportMouseDown: {
             type: 'predicate',
-            category: 'sensing',
+            category: 'IO',
             spec: 'mouse down?'
         },
         reportKeyPressed: {
             type: 'predicate',
-            category: 'sensing',
+            category: 'IO',
             spec: 'key %key pressed?',
             defaults: [['space']]
         },
         reportRelationTo: {
             only: SpriteMorph,
             type: 'reporter',
-            category: 'sensing',
+            category: 'IO',
             spec: '%rel to %dst',
             defaults: [['distance'], ['mouse-pointer']]
         },
         doResetTimer: {
             type: 'command',
-            category: 'sensing',
+            category: 'IO',
             spec: 'reset timer'
         },
         reportTimer: { // retained for legacy compatibility
             dev: true,
             type: 'reporter',
-            category: 'sensing',
+            category: 'IO',
             spec: 'timer'
         },
         getTimer: {
             type: 'reporter',
-            category: 'sensing',
+            category: 'IO',
             spec: 'timer'
         },
         reportAttributeOf: {
             type: 'reporter',
-            category: 'sensing',
+            category: 'IO',
             spec: '%att of %spr',
             defaults: [['costume #']]
         },
         reportObject: {
             type: 'reporter',
-            category: 'sensing',
+            category: 'IO',
             spec: 'object %self',
             defaults: [['myself']]
         },
         reportURL: {
             type: 'reporter',
-            category: 'sensing',
+            category: 'IO',
             spec: 'url %s',
             defaults: ['snap.berkeley.edu']
         },
         doSetGlobalFlag: {
             type: 'command',
-            category: 'sensing',
+            category: 'IO',
             spec: 'set %setting to %b',
             defaults: [['video capture']]
         },
         reportGlobalFlag: {
             type: 'predicate',
-            category: 'sensing',
+            category: 'IO',
             spec: 'is %setting on?',
             defaults: [['turbo mode']]
         },
         reportDate: {
             type: 'reporter',
-            category: 'sensing',
+            category: 'IO',
             spec: 'current %dates',
             defaults: [['date']]
         },
         reportGet: {
             type: 'reporter',
-            category: 'sensing',
+	    category: 'IO',
             spec: 'my %get',
             defaults: [['neighbors']]
         },
         reportAudio: {
             type: 'reporter',
-            category: 'sensing',
+            category: 'IO',
             spec: 'microphone %audio',
             defaults: [['volume']]
         },
