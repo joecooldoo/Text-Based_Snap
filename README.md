@@ -3,7 +3,7 @@
 
 [https://snap.berkeley.edu][snap]
 
-**[Try Snap<em>!</em> Now](https://snap.berkeley.edu/snap/)**
+**[Try Text-Based Snap<em>!</em> Now](https://warpedwartwars.github.io/Text-Based_Snap/snap.html)**
 
 a visual, blocks based programming language
 inspired by Scratch
