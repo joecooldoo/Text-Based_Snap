@@ -1747,7 +1747,7 @@ SpriteMorph.prototype.blockAlternatives = {
     doRun: ['fork'],
     fork: ['doRun'],
 
-    // sensing:
+    // IO:
     doAsk: ['bubble', 'doThink', 'doSayFor', 'doThinkFor'],
     getLastAnswer: ['getTimer'],
     getTimer: ['getLastAnswer'],
