@@ -613,6 +613,7 @@ SyntaxElementMorph.prototype.labelParts = {
         menu: {
             '\u2212' : ['\u2212'],
             '÷' : ['÷'],
+            '^' : ['^'],
             mod : ['mod']
     },
     '%fun': {
