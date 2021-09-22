@@ -1097,8 +1097,8 @@ SpriteMorph.prototype.initBlocks = function () {
         reportCommutativeOperator: {
             type: 'reporter',
             category: 'operators',
-            spec: '%n %co %nums',
-            defaults: [null, ['+'], [null]]
+            spec: '%n %co %osns',
+            defaults: [null, ['+']]
         },
         reportNonCommutativeOperator: {
             type: 'reporter',
