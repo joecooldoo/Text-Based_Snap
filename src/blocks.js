@@ -1047,6 +1047,13 @@ SyntaxElementMorph.prototype.labelParts = {
     '%nums': {
         type: 'multi',
         slots: '%n',
+        defaults: 2
+    },
+    // special case for the commutative operator,
+    // which only needs one slot by default
+    '%osns': {
+        type: 'multi',
+        slots: '%n',
         defaults: 1
     },
     '%exp': {
