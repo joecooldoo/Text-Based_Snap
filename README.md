@@ -14,7 +14,7 @@ jens@moenig.org, bh@cs.berkeley.edu, *none yet*
 ## Text-Based Snap<em>!</em> Community
 
 This repository contains the source code for the text-based mod of the Snap<em>!</em> IDE. If you have
-questions about using Text-Based Snap<em>!</em>, please [checkout the Snap! Forum topic for this mod][forum].
+questions about using Text-Based Snap<em>!</em>, please [check out the Snap! Forum topic for this mod][forum].
 
 We also maintain an active community at [snap.berkeley.edu][snap],
 where you can save and share your own projects. You can also
