@@ -1094,24 +1094,36 @@ SpriteMorph.prototype.initBlocks = function () {
             spec: '%rp %ringparms',
             alias: 'predicate ring lambda'
         },
-        reportSum: {
+        reportCommutativeOperator: {
+            type: 'reporter',
+            category: 'operators',
+            spec: '%n %co %nums',
+            defaults: [null, ['+'], [null]]
+        },
+        reportNonCommutativeOperator: {
+            type: 'reporter',
+            category: 'operators',
+            spec: '%n %nco %n',
+            defaults: [null, ['-']]
+        },
+        reportSum: { //deprecated
             type: 'reporter',
             category: 'operators',
             spec: '%n + %n'
         },
-        reportDifference: {
+        reportDifference: { //deprecated
             type: 'reporter',
             category: 'operators',
             spec: '%n \u2212 %n',
 	    alias: '-'
         },
-        reportProduct: {
+        reportProduct: { //deprecated
             type: 'reporter',
             category: 'operators',
             spec: '%n \u00D7 %n',
             alias: '*'
         },
-        reportQuotient: {
+        reportQuotient: { //deprecated
             type: 'reporter',
             category: 'operators',
             spec: '%n ÷ %n',
@@ -1128,12 +1140,12 @@ SpriteMorph.prototype.initBlocks = function () {
             spec: '%fun of %n',
             defaults: [['sqrt'], 10]
         },
-        reportPower: {
+        reportPower: { //deprecated
             type: 'reporter',
             category: 'operators',
             spec: '%n ^ %n'
         },
-        reportModulus: {
+        reportModulus: { //deprecated
             type: 'reporter',
             category: 'operators',
             spec: '%n mod %n'
@@ -1143,12 +1155,12 @@ SpriteMorph.prototype.initBlocks = function () {
             category: 'operators',
             spec: 'atan2 %n ÷ %n'
         },
-        reportMin: {
+        reportMin: { //deprecated
             type: 'reporter',
             category: 'operators',
             spec: '%n min %n'
         },
-        reportMax: {
+        reportMax: { //deprecated
             type: 'reporter',
             category: 'operators',
             spec: '%n max %n'
@@ -1582,6 +1594,44 @@ SpriteMorph.prototype.initBlockMigrations = function () {
             selector: 'receiveInteraction',
             inputs: [['clicked']]
         },
+	    /*
+	    ###################################################################################################################################################################
+	    ###################################################################################################################################################################
+	    ###################################################################################################################################################################
+	    ###################################################################################################################################################################
+	    */
+        reportSum: {
+            selector: 'reportCommutativeOperator',
+            inputs: [null, ['+']]
+	},
+        reportProduct: {
+            selector: 'reportCommutativeOperator',
+            inputs: [null, ['\u00D7']]
+	},
+        reportMax: {
+            selector: 'reportCommutativeOperator',
+            inputs: [null, ['max']]
+	},
+        reportMin: {
+            selector: 'reportCommutativeOperator',
+            inputs: [null, ['min']]
+	},
+        reportDifference: {
+            selector: 'reportNonCommutativeOperator',
+            inputs: [null, ['\u2212']]
+	},
+        reportQuotient: {
+            selector: 'reportNonCommutativeOperator',
+            inputs: [null, ['÷']]
+	},
+        reportPower: {
+            selector: 'reportNonCommutativeOperator',
+            inputs: [null, ['^']]
+	},
+        reportModulus: {
+            selector: 'reportNonCommutativeOperator',
+            inputs: [null, ['mod']]
+	},
         reportTrue: {
             selector: 'reportBoolean',
             inputs: [true]
