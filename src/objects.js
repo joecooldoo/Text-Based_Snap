@@ -2709,8 +2709,8 @@ SpriteMorph.prototype.blockTemplates = function (category = 'motion') {
             blocks.push('-');
             blocks.push(block('doDeleteAttr'));
         }
-
-        blocks.push('=');
+    } else if (category === 'lists') {
+	
         blocks.push(block('reportNewList'));
         blocks.push(block('reportNumbers'));
         blocks.push('-');
@@ -2745,7 +2745,11 @@ SpriteMorph.prototype.blockTemplates = function (category = 'motion') {
             blocks.push(this.devModeText());
             blocks.push('-');
             blocks.push(block('doShowTable'));
-            blocks.push('-');
+	}
+
+    } else if (category === 'other') {
+
+	if (devMode) {
             blocks.push(block('doApplyExtension'));
             blocks.push(block('reportApplyExtension'));
         }
@@ -3038,7 +3042,7 @@ SpriteMorph.prototype.freshPalette = function (category) {
                     ['doWarp'],
                 variables:
                     [
-                        'doDeclareVariables',
+                        'doDeclareVariables'/*,
                         'reportNewList',
                         'reportNumbers',
                         'reportCONS',
@@ -3058,7 +3062,7 @@ SpriteMorph.prototype.freshPalette = function (category) {
                         'doAddToList',
                         'doDeleteFromList',
                         'doInsertInList',
-                        'doReplaceInList'
+                        'doReplaceInList'*/
                     ]
             };
 
