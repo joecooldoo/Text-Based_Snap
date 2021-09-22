@@ -141,12 +141,12 @@ SpriteMorph.prototype.categories =
         'looks',
         'sound',
         'pen',*/
+	'lists',
+        'other',
         'control',
         'IO',
         'operators',
-        'variables',
-        'lists',
-        'other'
+        'variables'
     ];
 
 SpriteMorph.prototype.blockColor = {
@@ -3186,7 +3186,8 @@ SpriteMorph.prototype.freshPalette = function (category) {
         blocks.push(...this.customBlockTemplatesForCategory(category));
     }
     if (category === 'variables') {
-//here
+        blocks.push(...this.customBlockTemplatesForCategory('lists'));
+        blocks.push(...this.customBlockTemplatesForCategory('other'));
     }
 
     blocks.forEach(block => {
