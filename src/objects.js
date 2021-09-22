@@ -8914,7 +8914,7 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
         blocks.push(block('doShowVar'));
         blocks.push(block('doHideVar'));
         blocks.push(block('doDeclareVariables'));
-        blocks.push('=');
+    } else if (category === 'variables') {
         blocks.push(block('reportNewList'));
         blocks.push(block('reportNumbers'));
         blocks.push('-');
@@ -8948,12 +8948,13 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
             blocks.push(this.devModeText());
             blocks.push('-');
             blocks.push(block('doShowTable'));
-            blocks.push('-');
+	}
+    } else if (category === 'other') {
+	if (devMode) {
             blocks.push(block('doApplyExtension'));
             blocks.push(block('reportApplyExtension'));
+	    blocks.push('=');
         }
-
-        blocks.push('=');
 
         if (StageMorph.prototype.enableCodeMapping) {
             blocks.push(block('doMapCodeOrHeader'));
