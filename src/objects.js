@@ -12191,18 +12191,3 @@ StagePrompterMorph.prototype.mouseClickLeft = function () {
 StagePrompterMorph.prototype.accept = function () {
     this.isDone = true;
 };
-
-let //test
- ide = world.children[0]
- ,stage = ide.stage;
-
- let tm = new TextMorph( txt);
-  tm.fixLayout=function(){ this.parse()};
-  tm.backgroundColor= new Color(255,255,0);
-  tm.isEditable=true;
-  tm.bounds = stage.bounds;
-  stage.add( tm);
-  tm.changed();
-  world.edit( tm);
-
-return tm;
