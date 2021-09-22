@@ -1,4 +1,4 @@
-/* 3189
+/*
 
     objects.js
 
@@ -8914,7 +8914,8 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
         blocks.push(block('doShowVar'));
         blocks.push(block('doHideVar'));
         blocks.push(block('doDeclareVariables'));
-    } else if (category === 'lists') {
+    }
+    if (category === 'lists') {
         blocks.push(block('reportNewList'));
         blocks.push(block('reportNumbers'));
         blocks.push('-');
@@ -8949,7 +8950,8 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
             blocks.push('-');
             blocks.push(block('doShowTable'));
 	}
-    } else if (category === 'other') {
+    }
+    if (category === 'other') {
 	if (devMode) {
             blocks.push(block('doApplyExtension'));
             blocks.push(block('reportApplyExtension'));
