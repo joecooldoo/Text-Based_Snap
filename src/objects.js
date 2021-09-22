@@ -141,8 +141,6 @@ SpriteMorph.prototype.categories =
         'looks',
         'sound',
         'pen',*/
-	'lists',
-        'other',
         'control',
         'IO',
         'operators',
