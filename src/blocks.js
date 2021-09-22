@@ -473,12 +473,12 @@ SyntaxElementMorph.prototype.labelParts = {
         tags: 'read-only static',
         menu: {
             'length' : ['length'],
-            // 'size' : ['size'],
+            'size' : ['size'],
             'rank' : ['rank'],
             'dimensions' : ['dimensions'],
             'flatten' : ['flatten'],
             'columns' : ['columns'],
-            // 'transpose' : ['transpose'],
+            'transpose' : ['transpose'],
             'reverse' : ['reverse'],
             '~' : null,
             'lines' : ['lines'],
@@ -562,10 +562,10 @@ SyntaxElementMorph.prototype.labelParts = {
             whirl: ['whirl'],
             pixelate: ['pixelate'],
             mosaic: ['mosaic'],
-            negative : ['negative']
-            // duplicate: ['duplicate'],
-            // comic: ['comic'],
-            // confetti: ['confetti']
+            negative : ['negative'],
+            duplicate: ['duplicate'],
+            comic: ['comic'],
+            confetti: ['confetti']
         }
     },
     '%snd': {
@@ -598,13 +598,30 @@ SyntaxElementMorph.prototype.labelParts = {
         tags: 'read-only',
         menu: 'attributesMenu'
     },
+    '%co': {
+        type: 'input',
+        tags: 'read-only static',
+        menu: {
+            '+' : ['+'],
+            '\u00D7' : ['\u00D7'],
+            max : ['max'],
+            min : ['min']
+    },
+    '%nco': {
+        type: 'input',
+        tags: 'read-only static',
+        menu: {
+            '\u2212' : ['\u2212'],
+            '÷' : ['÷'],
+            mod : ['mod']
+    },
     '%fun': {
         type: 'input',
         tags: 'read-only static',
         menu: {
             abs : ['abs'],
-            // '\u2212' : ['\u2212'], // minus-sign
-            neg : ['neg'],
+            '\u2212' : ['\u2212'], // minus-sign
+            // neg : ['neg'],
             sign : ['sign'],
             ceiling : ['ceiling'],
             floor : ['floor'],
