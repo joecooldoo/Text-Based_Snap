@@ -146,7 +146,9 @@ SpriteMorph.prototype.categories =
         'control',
         'IO',
         'operators',
-        'variables'
+        'variables',
+	'lists',
+	'other'
     ];
 
 SpriteMorph.prototype.blockColor = {
@@ -3185,10 +3187,10 @@ SpriteMorph.prototype.freshPalette = function (category) {
         blocks.push('=');
         blocks.push(...this.customBlockTemplatesForCategory(category));
     }
-    if (category === 'variables') {
+    /*if (category === 'variables') {
         blocks.push(...this.customBlockTemplatesForCategory('lists'));
         blocks.push(...this.customBlockTemplatesForCategory('other'));
-    }
+    }*/
 
     blocks.forEach(block => {
         if (block === null) {
