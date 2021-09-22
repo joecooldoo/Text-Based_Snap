@@ -2674,13 +2674,9 @@ SpriteMorph.prototype.blockTemplates = function (category = 'motion') {
         blocks.push(block('reifyPredicate'));
         blocks.push('#');
         blocks.push('-');
-        blocks.push(block('reportSum'));
-        blocks.push(block('reportDifference'));
-        blocks.push(block('reportProduct'));
-        blocks.push(block('reportQuotient'));
-        blocks.push(block('reportPower'));
+        blocks.push(block('reportCommutativeOperator'));
+        blocks.push(block('reportNonCommutativeOperator'));
         blocks.push('-');
-        blocks.push(block('reportModulus'));
         blocks.push(block('reportRound'));
         blocks.push(block('reportMonadic'));
         blocks.push(block('reportRandom'));
