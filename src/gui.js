@@ -1373,25 +1373,25 @@ IDE_Morph.prototype.createCategories = function () {
             col;
 
         myself.categories.children.forEach((button, i) => {
-            row = i < 8 ? i % 4 : i - 4;
-            col = (i < 4 || i > 7) ? 1 : 2;
+            row = i < 6 ? i % 3 : i - 3;
+            col = (i < 3 || i > 5) ? 1 : 2;
             button.setPosition(new Point(
                 l + (col * xPadding + ((col - 1) * buttonWidth)),
                 t + ((row + 1) * yPadding + (row * buttonHeight) + border) +
-                    (i > 7 ? border + 2 : 0)
+                    (i > 5 ? border + 2 : 0)
             ));
         });
 
         myself.categories.setHeight(
-            (4 + 1) * yPadding
-                + 4 * buttonHeight
+            (3 + 1) * yPadding
+                + 3 * buttonHeight
                 + (more ? (more * (yPadding + buttonHeight) + border + 2) : 0)
                 + 2 * border
         );
     }
 
     SpriteMorph.prototype.categories.forEach(cat => {
-        if (!contains(['lists', 'other'], cat)) {
+        if (true /*!contains(['lists', 'other'], cat)*/) {
             addCategoryButton(cat);
         }
     });
