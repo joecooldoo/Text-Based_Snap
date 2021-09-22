@@ -4146,7 +4146,7 @@ IDE_Morph.prototype.settingsMenu = function () {
         this.scene.unifiedPalette,
         'uncheck to show only the selected category\'s blocks',
         'check to show all blocks in a single palette',
-        false
+        true
     );
     addPreference(
         'Persist linked sublist IDs',
