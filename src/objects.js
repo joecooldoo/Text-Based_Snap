@@ -8914,7 +8914,7 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
         blocks.push(block('doShowVar'));
         blocks.push(block('doHideVar'));
         blocks.push(block('doDeclareVariables'));
-    } else if (category === 'variables') {
+    } else if (category === 'lists') {
         blocks.push(block('reportNewList'));
         blocks.push(block('reportNumbers'));
         blocks.push('-');
