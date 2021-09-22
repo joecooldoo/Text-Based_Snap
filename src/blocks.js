@@ -606,6 +606,7 @@ SyntaxElementMorph.prototype.labelParts = {
             '\u00D7' : ['\u00D7'],
             max : ['max'],
             min : ['min']
+	}
     },
     '%nco': {
         type: 'input',
@@ -615,6 +616,7 @@ SyntaxElementMorph.prototype.labelParts = {
             '÷' : ['÷'],
             '^' : ['^'],
             mod : ['mod']
+	}
     },
     '%fun': {
         type: 'input',
