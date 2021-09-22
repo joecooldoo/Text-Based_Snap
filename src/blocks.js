@@ -1047,7 +1047,7 @@ SyntaxElementMorph.prototype.labelParts = {
     '%nums': {
         type: 'multi',
         slots: '%n',
-        defaults: 2
+        defaults: 1
     },
     '%exp': {
         type: 'multi',
