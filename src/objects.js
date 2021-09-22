@@ -1,4 +1,4 @@
-/*
+/* 3189
 
     objects.js
 
@@ -3186,8 +3186,7 @@ SpriteMorph.prototype.freshPalette = function (category) {
         blocks.push(...this.customBlockTemplatesForCategory(category));
     }
     if (category === 'variables') {
-        blocks.push(...this.customBlockTemplatesForCategory('lists'));
-        blocks.push(...this.customBlockTemplatesForCategory('other'));
+//here
     }
 
     blocks.forEach(block => {
