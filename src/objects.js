@@ -2947,7 +2947,7 @@ SpriteMorph.prototype.makeBlock = function () {
         },
         this
     );
-    if (category !== 'variables' || category !== 'unified') {
+    if (category !== 'unified') {
         dlg.category = category;
         dlg.categories.children.forEach(each => each.refresh());
         dlg.types.children.forEach(each => {
@@ -3164,7 +3164,7 @@ SpriteMorph.prototype.freshPalette = function (category) {
                 let header = [ this.categoryText(category), '-' ],
                     primitives = this.getPrimitiveTemplates(category),
                     customs = this.customBlockTemplatesForCategory(category),
-                    showHeader = !['lists', 'other'].includes(category) &&
+                    showHeader = true /*!['lists', 'other'].includes(category)*/ &&
                         (primitives.some(item =>
                             item instanceof BlockMorph) || customs.length);
 
