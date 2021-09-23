@@ -2699,6 +2699,7 @@ SpriteMorph.prototype.blockTemplates = function (category = 'motion') {
         blocks.push(block('reportTextSplit'));
         blocks.push(block('reportLetter'));
         blocks.push(block('reportStringSize'));
+        blocks.push(block('reportTextFunction'));
         blocks.push('-');
         blocks.push(block('reportUnicode'));
         blocks.push(block('reportUnicodeAsLetter'));
@@ -2717,8 +2718,7 @@ SpriteMorph.prototype.blockTemplates = function (category = 'motion') {
         if (true /*devMode*/) {
             //blocks.push('-');
             //blocks.push(this.devModeText());
-            blocks.push('-');
-            blocks.push(block('reportTextFunction'));
+            //blocks.push('-');
         }
 
     } else if (category === 'variables') {
@@ -8780,14 +8780,14 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
     } else if (category === 'control') {
 
         blocks.push(block('receiveGo'));
-        blocks.push(block('receiveKey'));
-        blocks.push(block('receiveInteraction'));
-        blocks.push(block('receiveCondition'));
+        //blocks.push(block('receiveKey'));
+        //blocks.push(block('receiveInteraction'));
+        //blocks.push(block('receiveCondition'));
         blocks.push('-');
         blocks.push(block('receiveMessage'));
         blocks.push(block('doBroadcast'));
         blocks.push(block('doBroadcastAndWait'));
-        blocks.push(block('doSend'));
+        //blocks.push(block('doSend'));
         blocks.push(watcherToggle('getLastMessage'));
         blocks.push(block('getLastMessage'));
         blocks.push('-');
@@ -8812,15 +8812,15 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
         blocks.push(block('fork'));
         blocks.push(block('evaluate'));
         blocks.push('-');
-        blocks.push(block('doTellTo'));
-        blocks.push(block('reportAskFor'));
-        blocks.push('-');
+        //blocks.push(block('doTellTo'));
+        //blocks.push(block('reportAskFor'));
+        //blocks.push('-');
         blocks.push(block('doCallCC'));
         blocks.push(block('reportCallCC'));
         blocks.push('-');
-        blocks.push(block('createClone'));
+        /*blocks.push(block('createClone'));
         blocks.push(block('newClone'));
-        blocks.push('-');
+        blocks.push('-');*/
         blocks.push(block('receiveOnScene'));
         blocks.push(block('doSwitchToScene'));
         blocks.push('-');
@@ -8828,10 +8828,10 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
 
     } else if (category === 'IO') {
 
-        blocks.push(block('doAsk'));
-        blocks.push(watcherToggle('getLastAnswer'));
-        blocks.push(block('getLastAnswer'));
-        blocks.push('-');
+        //blocks.push(block('doAsk'));
+        //blocks.push(watcherToggle('getLastAnswer'));
+        //blocks.push(block('getLastAnswer'));
+        //blocks.push('-');
         blocks.push(watcherToggle('reportMouseX'));
         blocks.push(block('reportMouseX'));
         blocks.push(watcherToggle('reportMouseY'));
@@ -8846,14 +8846,14 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
         blocks.push(watcherToggle('getTimer'));
         blocks.push(block('getTimer'));
         blocks.push('-');
-        blocks.push(block('reportAttributeOf'));
+        //blocks.push(block('reportAttributeOf'));
 
-        if (SpriteMorph.prototype.enableFirstClass) {
+        if (false /*SpriteMorph.prototype.enableFirstClass*/) {
             blocks.push(block('reportGet'));
         }
 
-        blocks.push(block('reportObject'));
-        blocks.push('-');
+        //blocks.push(block('reportObject'));
+        //blocks.push('-');
         blocks.push(block('reportURL'));
         blocks.push(block('reportAudio'));
         blocks.push(block('reportVideo'));
@@ -8863,6 +8863,8 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
         blocks.push(block('doSetGlobalFlag'));
         blocks.push('-');
         blocks.push(block('reportDate'));
+        blocks.push('-');
+        blocks.push(block('reportFrameCount'));
 
         // for debugging: ///////////////
         if (this.world().isDevMode) {
@@ -8872,7 +8874,6 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
             blocks.push(watcherToggle('reportThreadCount'));
             blocks.push(block('reportThreadCount'));
             blocks.push(block('reportStackSize'));
-            blocks.push(block('reportFrameCount'));
             blocks.push(block('reportYieldCount'));
         }
     }
@@ -8883,13 +8884,9 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
         blocks.push(block('reifyPredicate'));
         blocks.push('#');
         blocks.push('-');
-        blocks.push(block('reportSum'));
-        blocks.push(block('reportDifference'));
-        blocks.push(block('reportProduct'));
-        blocks.push(block('reportQuotient'));
-        blocks.push(block('reportPower'));
+        blocks.push(block('reportCommutativeOperator'));
+        blocks.push(block('reportNonCommutativeOperator'));
         blocks.push('-');
-        blocks.push(block('reportModulus'));
         blocks.push(block('reportRound'));
         blocks.push(block('reportMonadic'));
         blocks.push(block('reportRandom'));
@@ -8897,6 +8894,7 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
         blocks.push(block('reportLessThan'));
         blocks.push(block('reportEquals'));
         blocks.push(block('reportGreaterThan'));
+        blocks.push(block('reportIsIdentical'));
         blocks.push('-');
         blocks.push(block('reportAnd'));
         blocks.push(block('reportOr'));
@@ -8907,12 +8905,13 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
         blocks.push(block('reportTextSplit'));
         blocks.push(block('reportLetter'));
         blocks.push(block('reportStringSize'));
+        blocks.push(block('reportTextFunction'));
         blocks.push('-');
         blocks.push(block('reportUnicode'));
         blocks.push(block('reportUnicodeAsLetter'));
         blocks.push('-');
         blocks.push(block('reportIsA'));
-        blocks.push(block('reportIsIdentical'));
+        blocks.push(block('reportTypeOf'));
 
         if (Process.prototype.enableJS) { // (Process.prototype.enableJS) {
             blocks.push('-');
@@ -8923,12 +8922,10 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
         }
 
         // for debugging: ///////////////
-        if (this.world().isDevMode) {
+        if (false /*this.world().isDevMode*/) {
             blocks.push('-');
             blocks.push(this.devModeText());
-            blocks.push('-');
-            blocks.push(block('reportTypeOf'));
-            blocks.push(block('reportTextFunction'));
+            //blocks.push('-');
         }
 
     }
@@ -8959,7 +8956,7 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
         }
 
         blocks.push(block('doSetVar'));
-        blocks.push(block('doChangeVar'));
+        //blocks.push(block('doChangeVar'));
         blocks.push(block('doShowVar'));
         blocks.push(block('doHideVar'));
         blocks.push(block('doDeclareVariables'));
@@ -8969,11 +8966,10 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
         blocks.push(block('reportNumbers'));
         blocks.push('-');
         blocks.push(block('reportCONS'));
-        blocks.push(block('reportListItem'));
         blocks.push(block('reportCDR'));
-        blocks.push('-');
-        blocks.push(block('reportListAttribute'));
+        blocks.push(block('reportListItem'));
         blocks.push(block('reportListIndex'));
+        blocks.push(block('reportListAttribute'));
         blocks.push(block('reportListContainsItem'));
         blocks.push(block('reportListIsEmpty'));
         blocks.push('-');
@@ -8984,13 +8980,13 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
         blocks.push('-');
         blocks.push(block('doForEach'));
         blocks.push('-');
-        blocks.push(block('reportConcatenatedLists'));
+        blocks.push(block('reportListCombination'));
         blocks.push(block('reportReshape'));
-        blocks.push('-');
-        blocks.push(block('doAddToList'));
-        blocks.push(block('doDeleteFromList'));
-        blocks.push(block('doInsertInList'));
-        blocks.push(block('doReplaceInList'));
+        //blocks.push('-');
+        //blocks.push(block('doAddToList'));
+        //blocks.push(block('doDeleteFromList'));
+        //blocks.push(block('doInsertInList'));
+        //blocks.push(block('doReplaceInList'));
 
         // for debugging: ///////////////
         if (this.world().isDevMode) {
