@@ -6751,7 +6751,7 @@ ScriptsMorph.uber = FrameMorph.prototype;
 
 ScriptsMorph.prototype.cleanUpMargin = 20;
 ScriptsMorph.prototype.cleanUpSpacing = 15;
-ScriptsMorph.prototype.isPreferringEmptySlots = true;
+ScriptsMorph.prototype.isPreferringEmptySlots = false;
 ScriptsMorph.prototype.enableKeyboard = true;
 ScriptsMorph.prototype.enableNestedAutoWrapping = true;
 ScriptsMorph.prototype.feedbackColor = WHITE;
