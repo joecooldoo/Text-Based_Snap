@@ -1098,13 +1098,15 @@ SpriteMorph.prototype.initBlocks = function () {
             type: 'reporter',
             category: 'operators',
             spec: '%n %co %osns',
-            defaults: [null, ['+']]
+            defaults: [null, ['+']],
+            alias: '*'
         },
         reportNonCommutativeOperator: {
             type: 'reporter',
             category: 'operators',
             spec: '%n %nco %n',
-            defaults: [null, ['-']]
+            defaults: [null, ['\u2212']],
+            alias: '- /'
         },
         reportSum: { //deprecated
             type: 'reporter',
