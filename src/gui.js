@@ -3768,7 +3768,7 @@ IDE_Morph.prototype.settingsMenu = function () {
         'check to support\nnative JavaScript functions' /* +
             '.\n' +
             'NOTE: You will have to manually\n' +
-            'sign in again to access your account.' */
+            'sign in again to access your account.' *\/
     );*/
     addPreference(
         'Add scenes',
