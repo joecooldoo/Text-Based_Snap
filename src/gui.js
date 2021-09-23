@@ -1165,9 +1165,9 @@ IDE_Morph.prototype.createControlBar = function () {
         steppingButton.setRight(slider.left() - padding);
 
         settingsButton.setCenter(myself.controlBar.center());
-        settingsButton.setLeft(this.left());
 
         projectButton.setCenter(myself.controlBar.center());
+        projectButton.setLeft(this.left());
 
         if (myself.cloud.disabled) {
             cloudButton.hide();
