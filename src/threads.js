@@ -3953,7 +3953,7 @@ Process.prototype.reportCommutativeOperator = function (a, op, b) { // a is a nu
     };
 };
 
-Process.prototype.reportCommutativeOperator = function (a, op, b) {
+Process.prototype.reportNonCommutativeOperator = function (a, op, b) {
     switch (op) {
         case '\u2212':
             return this.reportDifference(a, b);
