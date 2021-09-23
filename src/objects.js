@@ -1807,7 +1807,7 @@ SpriteMorph.prototype.blockAlternatives = {
     reportMouseY: ['reportMouseX'],
 
     // operators:
-    reportSum: ['reportDifference', 'reportProduct', 'reportQuotient',
+    /*reportSum: ['reportDifference', 'reportProduct', 'reportQuotient',
         'reportPower', 'reportModulus', 'reportAtan2', 'reportMin',
         'reportMax'],
     reportDifference: ['reportSum', 'reportProduct', 'reportQuotient',
@@ -1823,13 +1823,13 @@ SpriteMorph.prototype.blockAlternatives = {
         'reportQuotient', 'reportModulus', 'reportAtan2', 'reportMin',
         'reportMax'],
     reportModulus: ['reportAtan2', 'reportDifference', 'reportProduct',
-        'reportSum','reportQuotient', 'reportPower', 'reportMin', 'reportMax'],
+        'reportSum','reportQuotient', 'reportPower', 'reportMin', 'reportMax'],*/
     reportAtan2: ['reportModulus', 'reportDifference', 'reportProduct',
         'reportSum','reportQuotient', 'reportPower', 'reportMin', 'reportMax'],
-    reportMin: ['reportMax', 'reportSum', 'reportDifference', 'reportProduct',
+    /*reportMin: ['reportMax', 'reportSum', 'reportDifference', 'reportProduct',
         'reportQuotient', 'reportPower', 'reportModulus', 'reportAtan2'],
     reportMax: ['reportMin', 'reportSum', 'reportDifference', 'reportProduct',
-        'reportQuotient', 'reportPower', 'reportModulus', 'reportAtan2'],
+        'reportQuotient', 'reportPower', 'reportModulus', 'reportAtan2'],*/
     reportLessThan: ['reportLessThanOrEquals', 'reportEquals',
         'reportNotEquals', 'reportGreaterThan', 'reportGreaterThanOrEquals'],
     reportEquals: ['reportIsIdentical', 'reportNotEquals', 'reportLessThan',
@@ -1854,8 +1854,8 @@ SpriteMorph.prototype.blockAlternatives = {
     reportOr: ['reportAnd'],
 
     // variables
-    doSetVar: ['doChangeVar'],
-    doChangeVar: ['doSetVar'],
+    //doSetVar: ['doChangeVar'],
+    //doChangeVar: ['doSetVar'],
     doShowVar: ['doHideVar'],
     doHideVar: ['doShowVar'],
 
