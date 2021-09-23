@@ -3943,13 +3943,13 @@ Process.prototype.isMatrix = function (data) {
 Process.prototype.reportCommutativeOperator = function (a, op, b) { // a is a number,
     switch (op) {                                                   // op is an operator,
         case '+':                                                   // b is a list of nums
-            return this.reportCombine(this.reportCONS(a, b), this.reportSum);
+            return b.asArray().reduce(this.reportSum, a);
         case '\u00D7':
-            return this.reportCombine(this.reportCONS(a, b), this.reportProduct);
+            return b.asArray().reduce(this.reportProduct, a);
         case 'max':
-            return this.reportCombine(this.reportCONS(a, b), this.reportMax);
+            return b.asArray().reduce(this.reportMax, a);
         case 'min':
-            return this.reportCombine(this.reportCONS(a, b), this.reportMin);
+            return b.asArray().reduce(this.reportMin, a);
     };
 };
 
