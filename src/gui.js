@@ -3876,7 +3876,7 @@ IDE_Morph.prototype.settingsMenu = function () {
         ScriptsMorph.prototype.isPreferringEmptySlots,
         'uncheck to allow dropped\nreporters to kick out others',
         'settings menu prefer empty slots hint',
-        // true
+        true
     );
     addPreference(
         'Long form input dialog',
