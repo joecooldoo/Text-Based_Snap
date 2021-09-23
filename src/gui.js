@@ -1174,8 +1174,8 @@ IDE_Morph.prototype.createControlBar = function () {
             settingsButton.setLeft(projectButton.right() + padding);
         } else {
             cloudButton.setCenter(myself.controlBar.center());
-            cloudButton.setRight(settingsButton.left() - padding);
-            projectButton.setRight(cloudButton.left() - padding);
+            cloudButton.setLeft(projectButton.right() + padding);
+            settingsButton.setLeft(cloudButton.right() + padding);
         }
 
         this.refreshSlider();
