@@ -1165,16 +1165,17 @@ IDE_Morph.prototype.createControlBar = function () {
         steppingButton.setRight(slider.left() - padding);
 
         settingsButton.setCenter(myself.controlBar.center());
+        settingsButton.setLeft(this.left());
+
+        cloudButton.setCenter(myself.controlBar.center());
+        cloudButton.setRight(settingsButton.left() - padding);
 
         projectButton.setCenter(myself.controlBar.center());
-        projectButton.setLeft(this.left());
 
         if (false /*myself.cloud.disabled*/) {
             cloudButton.hide();
-            settingsButton.setLeft(projectButton.right() + padding);
+            settingsButton.setLeft(cloudButton.left());
         } else {
-            cloudButton.setCenter(myself.controlBar.center());
-            cloudButton.setLeft(projectButton.right() + padding);
             settingsButton.setLeft(cloudButton.right() + padding);
         }
 
