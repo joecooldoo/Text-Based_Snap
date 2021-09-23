@@ -3950,7 +3950,7 @@ Process.prototype.reportCommutativeOperator = function (a, op, b) { // a is a nu
             return Math.max(a, this.reportListAggregation(b, 'reportMax'));
         case 'min':
             return Math.min(a, this.reportListAggregation(b, 'reportMin'));
-    };
+    }
 };
 
 Process.prototype.reportNonCommutativeOperator = function (a, op, b) {
@@ -3963,7 +3963,7 @@ Process.prototype.reportNonCommutativeOperator = function (a, op, b) {
             return this.reportPower(a, b);
         case 'mod':
             return this.reportModulus(a, b);
-    };
+    }
 };
 
 Process.prototype.reportSum = function (a, b) {
