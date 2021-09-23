@@ -236,6 +236,10 @@ IDE_Morph.prototype.init = function (isAutoFill) {
 
     // additional properties:
     this.cloud = new Cloud();
+    /////////////////////
+    // disable cloud
+    this.cloud.disable();
+    /////////////////////
     this.cloudMsg = null;
     this.source = null;
     this.serializer = new SnapSerializer();
