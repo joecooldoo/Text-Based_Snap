@@ -3941,7 +3941,7 @@ Process.prototype.isMatrix = function (data) {
 // Process math primtives - arithmetic
 
 Process.prototype.reportCommutativeOperator = function (a, op, b) { // a is a number,
-    switch (op) {                                                   // op is an operator,
+    switch (op[0]) {                                                // op is an operator,
         case '+':                                                   // b is a list of nums
             return a + this.reportListAggregation(b, 'reportSum');
         case '\u00D7':
@@ -3954,7 +3954,7 @@ Process.prototype.reportCommutativeOperator = function (a, op, b) { // a is a nu
 };
 
 Process.prototype.reportNonCommutativeOperator = function (a, op, b) {
-    switch (op) {
+    switch (op[0]) {
         case '\u2212':
             return this.reportDifference(a, b);
         case '÷':
