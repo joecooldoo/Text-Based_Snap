@@ -3751,14 +3751,14 @@ IDE_Morph.prototype.settingsMenu = function () {
         'microphoneMenu'
     );
     menu.addLine();
-    addPreference(
+    /*addPreference(
         'JavaScript extensions',
         () => {
             /*
             if (!Process.prototype.enableJS) {
                 this.logout();
             }
-            */
+            *\/
             Process.prototype.enableJS = !Process.prototype.enableJS;
             this.flushBlocksCache('operators');
             this.refreshPalette();
@@ -3769,7 +3769,7 @@ IDE_Morph.prototype.settingsMenu = function () {
             '.\n' +
             'NOTE: You will have to manually\n' +
             'sign in again to access your account.' */
-    );
+    );*/
     addPreference(
         'Add scenes',
         () => this.isAddingScenes = !this.isAddingScenes,
@@ -3876,14 +3876,15 @@ IDE_Morph.prototype.settingsMenu = function () {
         ScriptsMorph.prototype.isPreferringEmptySlots,
         'uncheck to allow dropped\nreporters to kick out others',
         'settings menu prefer empty slots hint',
-        true
+        // true
     );
     addPreference(
         'Long form input dialog',
         'toggleLongFormInputDialog',
         InputSlotDialogMorph.prototype.isLaunchingExpanded,
         'uncheck to use the input\ndialog in short form',
-        'check to always show slot\ntypes in the input dialog'
+        'check to always show slot\ntypes in the input dialog',
+        //true
     );
     addPreference(
         'Plain prototype labels',
@@ -3900,7 +3901,7 @@ IDE_Morph.prototype.settingsMenu = function () {
         'check to enable\nvirtual keyboard support\nfor mobile devices',
         true
     );
-    addPreference(
+    /*addPreference(
         'Clicking sound',
         () => {
             BlockMorph.prototype.toggleSnapSound();
@@ -3913,7 +3914,7 @@ IDE_Morph.prototype.settingsMenu = function () {
         BlockMorph.prototype.snapSound,
         'uncheck to turn\nblock clicking\nsound off',
         'check to turn\nblock clicking\nsound on'
-    );
+    );*/
     addPreference(
         'Animations',
         () => this.isAnimating = !this.isAnimating,
@@ -3952,8 +3953,7 @@ IDE_Morph.prototype.settingsMenu = function () {
         },
         MorphicPreferences.isFlat,
         'uncheck for default\nGUI design',
-        'check for alternative\nGUI design',
-        false
+        'check for flat\nGUI design'
     );
     addPreference(
         'Nested auto-wrapping',
@@ -4064,9 +4064,9 @@ IDE_Morph.prototype.settingsMenu = function () {
         () => Process.prototype.enableLiveCoding =
             !Process.prototype.enableLiveCoding,
         Process.prototype.enableLiveCoding,
-        'EXPERIMENTAL! uncheck to disable live\ncustom control structures',
-        'EXPERIMENTAL! check to enable\n live custom control structures',
-        true
+        /*'EXPERIMENTAL!*/ 'uncheck to disable live\ncustom control structures',
+        /*'EXPERIMENTAL!*/ 'check to enable\n live custom control structures',
+        //true
     );
     addPreference(
         'JIT compiler support',
@@ -4146,7 +4146,7 @@ IDE_Morph.prototype.settingsMenu = function () {
         this.scene.unifiedPalette,
         'uncheck to show only the selected category\'s blocks',
         'check to show all blocks in a single palette',
-        true
+        //true
     );
     addPreference(
         'Persist linked sublist IDs',
