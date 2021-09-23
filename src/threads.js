@@ -3940,16 +3940,16 @@ Process.prototype.isMatrix = function (data) {
 
 // Process math primtives - arithmetic
 
-Process.prototype.reportCommutativeOperator = function (a, op, b) {
-    switch (op) {
-        case '+':
-            return this.reportSum(a, b);
+Process.prototype.reportCommutativeOperator = function (a, op, b) { // a is a number,
+    switch (op) {                                                   // op is an operator,
+        case '+':                                                   // b is a list of nums
+            return this.reportCombine(this.reportCONS(a, b), this.reportSum);
         case '\u00D7':
-            return this.reportProduct(a, b);
+            return this.reportCombine(this.reportCONS(a, b), this.reportProduct);
         case 'max':
-            return this.reportMax(a, b);
+            return this.reportCombine(this.reportCONS(a, b), this.reportMax);
         case 'min':
-            return this.reportMin(a, b);
+            return this.reportCombine(this.reportCONS(a, b), this.reportMin);
     };
 };
 
