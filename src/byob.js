@@ -3211,7 +3211,7 @@ InputSlotDialogMorph.uber = DialogBoxMorph.prototype;
 // InputSlotDialogMorph preferences settings:
 
 // if "isLaunchingExpanded" is true I always open in the long form
-InputSlotDialogMorph.prototype.isLaunchingExpanded = false;
+InputSlotDialogMorph.prototype.isLaunchingExpanded = true;
 
 // InputSlotDialogMorph instance creation:
 
