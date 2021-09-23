@@ -8913,7 +8913,7 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
         blocks.push(block('reportIsA'));
         blocks.push(block('reportTypeOf'));
 
-        if (Process.prototype.enableJS) { // (Process.prototype.enableJS) {
+        if (Process.prototype.enableJS) {
             blocks.push('-');
             blocks.push(block('reportJSFunction'));
             if (Process.prototype.enableCompiling) {
@@ -8923,8 +8923,8 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
 
         // for debugging: ///////////////
         if (false /*this.world().isDevMode*/) {
-            blocks.push('-');
-            blocks.push(this.devModeText());
+            //blocks.push('-');
+            //blocks.push(this.devModeText());
             //blocks.push('-');
         }
 
@@ -8982,6 +8982,7 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
         blocks.push('-');
         blocks.push(block('reportListCombination'));
         blocks.push(block('reportReshape'));
+        blocks.push(block('reportSlice'));
         //blocks.push('-');
         //blocks.push(block('doAddToList'));
         //blocks.push(block('doDeleteFromList'));
@@ -8997,7 +8998,7 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
 	}
     }
     if (category === 'other') {
-	if (devMode) {
+	if (this.world().isDevMode) {
             blocks.push(block('doApplyExtension'));
             blocks.push(block('reportApplyExtension'));
 	    blocks.push('=');
