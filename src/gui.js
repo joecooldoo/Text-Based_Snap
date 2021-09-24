@@ -2872,7 +2872,7 @@ IDE_Morph.prototype.applySavedSettings = function () {
         tableLines = this.getSetting('tableLines'),
         autoWrapping = this.getSetting('autowrapping'),
         solidshadow = this.getSetting('solidshadow'),
-        onecat = this.getSetting('onecat');
+        multicat = this.getSetting('multicat');
 
     // design
     if (design === 'flat') {
@@ -2957,9 +2957,8 @@ IDE_Morph.prototype.applySavedSettings = function () {
     }
 
     // unified palette
-    if (onecat) {
-        this.unified = true;
-        this.rerender();
+    if (!isNil(multicat)) {
+        this.setUnifiedPalette(!multicat);
     }
 };
 
@@ -6246,10 +6245,10 @@ IDE_Morph.prototype.toggleStageSize = function (isSmall, forcedRatio) {
 
 IDE_Morph.prototype.toggleUnifiedPalette = function () {
     this.setUnifiedPalette(!this.scene.unifiedPalette);
-    if (this.scene.unifiedPalette) {
-        this.saveSetting('onecat', true);
+    if (!this.scene.unifiedPalette) {
+        this.saveSetting('multicat', true);
     } else {
-        this.removeSetting('onecat');
+        this.removeSetting('multicat');
     }
 };
 
