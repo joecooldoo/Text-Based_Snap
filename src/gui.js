@@ -2620,21 +2620,16 @@ IDE_Morph.prototype.scrollPaletteToCategory = function (category) {
     if (palette.isForSearching) {
         this.refreshPalette();
         palette = this.palette;
-    }
-    var otherExceptions = ['doWarp', 'reifyScript',
-			   'reifyReporter', 'reifyPredicate',
-			   'doDeclareVariables'];
-    firstInCategory = palette.contents.children.find(
-    // prevent going to WARP when
-    // switching to "other" category
-        function (block) {return block.category === category &&
-                          /*(category === "other" && // doesn't work, commented out
-			   SpriteMorph.prototype.customBlockTemplatesForCategory('other').map((element, index) => element === otherExceptions[index]).reduce((a, b) => a && b)
-			   ? "lists" : category) &&*/
-                          !otherExceptions.includes(block.selector)}
-    );
+    };
+    firstInCategory = palette.contents.children.find(block =>
+        {block.category === category});
 
-    if (firstInCategory === undefined) {return; }
+    if (firstInCategory === undefined) {
+        if (category === 'other') {
+            firstInCategory = palette.contents.children.find(block =>
+                {block.category === 'lists'});
+	} else {return; };
+    };
     delta = palette.top() - firstInCategory.top() + palette.padding;
     if (delta === 0) {return; }
     this.world().animations.push(new Animation(
@@ -2656,28 +2651,11 @@ IDE_Morph.prototype.topVisibleCategoryInPalette = function () {
     // block category in the palette, so it can be indicated
     // as "current category" in the category selection buttons
     var top;
-    if (!this.palette) {return; }
+    if (!this.palette) {return; };
     top = this.palette.contents.children.find(morph =>
         morph.category && morph.bounds.intersects(this.palette.bounds)
     );
-    if (top) {
-        if (top.category === 'other') {
-            if (top.selector === 'doWarp') {
-                return 'control';
-            }
-            if (top instanceof RingMorph) {
-                return 'operators';
-            }
-            if (top.selector === 'doDeclareVariables') {
-                return 'variables';
-	    }
-        }
-        /*if (top.category === 'lists') {
-            return 'variables';
-        }*/
-        return top.category;
-    }
-    return null;
+    return top ? top.category : null;
 };
 
 IDE_Morph.prototype.pressStart = function () {
