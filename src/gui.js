@@ -2621,13 +2621,17 @@ IDE_Morph.prototype.scrollPaletteToCategory = function (category) {
         this.refreshPalette();
         palette = this.palette;
     }
+    var otherExceptions = ['doWarp', 'reifyScript',
+			   'reifyReporter', 'reifyPredicate',
+			   'doDeclareVariables'];
     firstInCategory = palette.contents.children.find(
     // prevent going to WARP when
     // switching to "other" category
-        function (block) {console.log(block.selector); return block.category === category &&
-                          !['doWarp', 'reifyScript',
-			    'reifyReporter', 'reifyPredicate',
-			    'doDeclareVariables'].includes(block.selector)}
+        function (block) {block.category === category &&
+                          /*(category === "other" && // doesn't work, commented out
+			   SpriteMorph.prototype.customBlockTemplatesForCategory('other').map((element, index) => element === otherExceptions[index]).reduce((a, b) => a && b)
+			   ? "lists" : category) &&*/
+                          !otherExceptions.includes(block.selector)}
     );
 
     if (firstInCategory === undefined) {return; }
@@ -2664,7 +2668,9 @@ IDE_Morph.prototype.topVisibleCategoryInPalette = function () {
             if (top instanceof RingMorph) {
                 return 'operators';
             }
-            //return 'variables';
+            if (top.selector === 'doDeclareVariables') {
+                return 'variables';
+	    }
         }
         /*if (top.category === 'lists') {
             return 'variables';
@@ -5933,8 +5939,8 @@ IDE_Morph.prototype.switchToDevMode = function () {
     this.controlBar.updateLabel();
     this.isAutoFill = true; // was false
     this.isDraggable = false; // was true
-    this.setExtent(world.extent().subtract(100));
-    this.setPosition(world.position().add(20));
+    this.setExtent(world.extent()/*.subtract(100)*/);
+    this.setPosition(world.position()/*.add(20)*/);
     this.flushBlocksCache();
     this.refreshPalette();
     // enable non-DialogBoxMorphs to be dropped
