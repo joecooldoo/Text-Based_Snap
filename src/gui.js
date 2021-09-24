@@ -880,7 +880,7 @@ IDE_Morph.prototype.createControlBar = function () {
         WHITE
         : this.buttonLabelColor;
     button.contrast = this.buttonContrast;
-    // button.hint = 'stage size\nsmall & normal';
+    button.hint = 'toggle stage size';
     button.fixLayout();
     button.refresh();
     stageSizeButton = button;
@@ -910,7 +910,7 @@ IDE_Morph.prototype.createControlBar = function () {
     button.labelShadowColor = colors[1];
     button.labelColor = this.buttonLabelColor;
     button.contrast = this.buttonContrast;
-    // button.hint = 'app & edit\nmodes';
+    button.hint = 'toggle presentation/\nedit mode';
     button.fixLayout();
     button.refresh();
     appModeButton = button;
@@ -939,7 +939,7 @@ IDE_Morph.prototype.createControlBar = function () {
     button.labelShadowColor = colors[1];
     button.labelColor = this.buttonLabelColor;
     button.contrast = this.buttonContrast;
-    button.hint = 'Visible stepping';
+    button.hint = 'toggle visible\nstepping';
     button.fixLayout();
     button.refresh();
     steppingButton = button;
@@ -975,7 +975,7 @@ IDE_Morph.prototype.createControlBar = function () {
         0
     );
     button.contrast = this.buttonContrast;
-    // button.hint = 'stop\nevery-\nthing';
+    button.hint = 'stop everything';
     button.fixLayout();
     button.refresh();
     stopButton = button;
@@ -1007,7 +1007,7 @@ IDE_Morph.prototype.createControlBar = function () {
         new Color(220, 185, 0)
             : new Color(255, 220, 0);
     button.contrast = this.buttonContrast;
-    // button.hint = 'pause/resume\nall scripts';
+    button.hint = 'pause/resume\nall scripts';
     button.fixLayout();
     button.refresh();
     pauseButton = button;
@@ -1034,7 +1034,7 @@ IDE_Morph.prototype.createControlBar = function () {
         0
     );
     button.contrast = this.buttonContrast;
-    // button.hint = 'start green\nflag scripts';
+    button.hint = 'start green\nflag scripts';
     button.fixLayout();
     startButton = button;
     this.controlBar.add(startButton);
@@ -1076,7 +1076,7 @@ IDE_Morph.prototype.createControlBar = function () {
     button.labelShadowColor = colors[1];
     button.labelColor = this.buttonLabelColor;
     button.contrast = this.buttonContrast;
-    // button.hint = 'open, save, & annotate project';
+    button.hint = 'open, save, & annotate project';
     button.fixLayout();
     projectButton = button;
     this.controlBar.add(projectButton);
@@ -1099,7 +1099,7 @@ IDE_Morph.prototype.createControlBar = function () {
     button.labelShadowColor = colors[1];
     button.labelColor = this.buttonLabelColor;
     button.contrast = this.buttonContrast;
-    // button.hint = 'edit settings';
+    button.hint = 'edit settings';
     button.fixLayout();
     settingsButton = button;
     this.controlBar.add(settingsButton);
@@ -1128,7 +1128,7 @@ IDE_Morph.prototype.createControlBar = function () {
     button.labelShadowColor = colors[1];
     button.labelColor = this.buttonLabelColor;
     button.contrast = this.buttonContrast;
-    // button.hint = 'cloud operations';
+    button.hint = 'cloud operations';
     button.fixLayout();
     button.refresh();
     cloudButton = button;
@@ -1216,7 +1216,7 @@ IDE_Morph.prototype.createControlBar = function () {
 
     this.controlBar.updateLabel = function () {
         var prefix = myself.hasUnsavedEdits() ? '\u270E ' : '',
-            suffix = myself.world().isDevMode ?
+            suffix = /*myself.world().isDevMode*/ false ?
                 ' - ' + localize('development mode') : '',
             txt;
 
@@ -2622,8 +2622,14 @@ IDE_Morph.prototype.scrollPaletteToCategory = function (category) {
         palette = this.palette;
     }
     firstInCategory = palette.contents.children.find(
-        block => block.category === category
+    // prevent switching to "other" category
+    // going to WARP
+        function (block) {block.category === category &&
+                          !['doWarp', 'reifyScript',
+			    'reifyReporter', 'reifyPredicate',
+			    'doDeclareVariables'].contains(block)}
     );
+
     if (firstInCategory === undefined) {return; }
     delta = palette.top() - firstInCategory.top() + palette.padding;
     if (delta === 0) {return; }
@@ -2658,11 +2664,11 @@ IDE_Morph.prototype.topVisibleCategoryInPalette = function () {
             if (top instanceof RingMorph) {
                 return 'operators';
             }
-            return 'variables';
+            //return 'variables';
         }
-        if (top.category === 'lists') {
+        /*if (top.category === 'lists') {
             return 'variables';
-        }
+        }*/
         return top.category;
     }
     return null;
@@ -3487,7 +3493,7 @@ IDE_Morph.prototype.snapMenu = function () {
     menu.addItem(
         'Download source',
         () => window.open(
-                'https://github.com/WarpedWartWars/Text-Based_Snap/releases/latest',
+                'https://github.com/WarpedWartWars/Text-Based_Snap', // /releases/latest',
                 'SnapSource'
             )
     );
