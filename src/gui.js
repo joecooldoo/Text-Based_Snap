@@ -2624,12 +2624,13 @@ IDE_Morph.prototype.scrollPaletteToCategory = function (category) {
     firstInCategory = palette.contents.children.find(block =>
         {block.category === category});
 
-    if (firstInCategory === null) {
+    if (firstInCategory === undefined) {
         if (category === 'other') {
             firstInCategory = palette.contents.children.find(function (block)
                 {console.log(block); return block.category === 'lists';});
 	} else {return; };
     };
+    if (firstInCategory === undefined) {return; };
     try {delta = palette.top() - firstInCategory.top() + palette.padding;}
     catch (err) {console.log(err); return;};
     if (delta === 0) {return; }
