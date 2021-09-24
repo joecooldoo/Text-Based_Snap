@@ -897,9 +897,31 @@ SpriteMorph.prototype.initBlocks = function () {
 
         // Debugging - pausing
         doPauseAll: {
+            dev: true,
             type: 'command',
             category: 'control',
             spec: 'pause all %pause'
+        },
+
+        doResumeAll: {
+            dev: true,
+            type: 'command',
+            category: 'control',
+            spec: 'resume all %resume'
+        },
+
+        doStep: {
+            dev: true,
+            type: 'command',
+            category: 'control',
+            spec: 'step %step'
+        },
+
+        reportPaused: {
+            dev: true,
+            type: 'predicate',
+            category: 'control',
+            spec: 'paused? %pause'
         },
 
         // Scenes
@@ -1881,6 +1903,9 @@ SpriteMorph.prototype.blockAlternatives = {
         ['doForEach', -1]],
     doRun: ['fork'],
     fork: ['doRun'],
+    doPauseAll: ['doResumeAll', 'doStep'],
+    doResumeAll: ['doPauseAll', 'doStep'],
+    doStep: ['doPauseAll', 'doResumeAll'],
 
     // IO:
     doAsk: ['bubble', 'doThink', 'doSayFor', 'doThinkFor'],
@@ -1890,55 +1915,11 @@ SpriteMorph.prototype.blockAlternatives = {
     reportMouseY: ['reportMouseX'],
 
     // operators:
-    /*reportSum: ['reportDifference', 'reportProduct', 'reportQuotient',
-        'reportPower', 'reportModulus', 'reportAtan2', 'reportMin',
-        'reportMax'],
-    reportDifference: ['reportSum', 'reportProduct', 'reportQuotient',
-        'reportPower', 'reportModulus', 'reportAtan2', 'reportMin',
-        'reportMax'],
-    reportProduct: ['reportDifference', 'reportSum', 'reportQuotient',
-        'reportPower', 'reportModulus', 'reportAtan2', 'reportMin',
-        'reportMax'],
-    reportQuotient: ['reportDifference', 'reportProduct', 'reportSum',
-        'reportPower', 'reportModulus', 'reportAtan2', 'reportMin',
-        'reportMax'],
-    reportPower: ['reportDifference', 'reportProduct', 'reportSum',
-        'reportQuotient', 'reportModulus', 'reportAtan2', 'reportMin',
-        'reportMax'],
-    reportModulus: ['reportAtan2', 'reportDifference', 'reportProduct',
-        'reportSum','reportQuotient', 'reportPower', 'reportMin', 'reportMax'],
-    reportAtan2: ['reportModulus', 'reportDifference', 'reportProduct',
-        'reportSum','reportQuotient', 'reportPower', 'reportMin', 'reportMax'],
-    reportMin: ['reportMax', 'reportSum', 'reportDifference', 'reportProduct',
-        'reportQuotient', 'reportPower', 'reportModulus', 'reportAtan2'],
-    reportMax: ['reportMin', 'reportSum', 'reportDifference', 'reportProduct',
-        'reportQuotient', 'reportPower', 'reportModulus', 'reportAtan2'],
-    reportLessThan: ['reportLessThanOrEquals', 'reportEquals',
-        'reportNotEquals', 'reportGreaterThan', 'reportGreaterThanOrEquals'],
-    reportEquals: ['reportIsIdentical', 'reportNotEquals', 'reportLessThan',
-        'reportLessThanOrEquals', 'reportGreaterThan',
-        'reportGreaterThanOrEquals'],
-    reportNotEquals: ['reportEquals', 'reportIsIdentical', 'reportLessThan',
-        'reportLessThanOrEquals', 'reportGreaterThan',
-        'reportGreaterThanOrEquals'],
-    reportGreaterThan: ['reportGreaterThanOrEquals', 'reportEquals',
-        'reportIsIdentical', 'reportNotEquals', 'reportLessThan',
-        'reportLessThanOrEquals'],
-    reportLessThanOrEquals: ['reportLessThan', 'reportEquals',
-        'reportIsIdentical', 'reportNotEquals', 'reportGreaterThan',
-        'reportGreaterThanOrEquals'],
-    reportGreaterThanOrEquals: ['reportGreaterThan', 'reportEquals',
-        'reportIsIdentical', 'reportNotEquals', 'reportLessThan',
-        'reportLessThanOrEquals'],
-    reportIsIdentical: ['reportEquals', 'reportNotEquals', 'reportLessThan',
-        'reportLessThanOrEquals', 'reportGreaterThan',
-        'reportGreaterThanOrEquals'],
-    reportAnd: ['reportOr'],
-    reportOr: ['reportAnd'],*/
+    reifyScript: ['reifyReporter', 'reifyPredicate'],
+    reifyReporter: ['reifyScript', 'reifyPredicate'],
+    reifyPredicate: ['reifyScript', 'reifyReporter'],
 
     // variables
-    //doSetVar: ['doChangeVar'],
-    //doChangeVar: ['doSetVar'],
     doShowVar: ['doHideVar'],
     doHideVar: ['doShowVar'],
 
@@ -2650,14 +2631,10 @@ SpriteMorph.prototype.blockTemplates = function (category = 'motion') {
     } else if (category === 'control') {
 
         blocks.push(block('receiveGo'));
-        //blocks.push(block('receiveKey'));
-        //blocks.push(block('receiveInteraction'));
-        //blocks.push(block('receiveCondition'));
         blocks.push('-');
         blocks.push(block('receiveMessage'));
         blocks.push(block('doBroadcast'));
         blocks.push(block('doBroadcastAndWait'));
-        //blocks.push(block('doSend'));
         blocks.push(watcherToggle('getLastMessage'));
         blocks.push(block('getLastMessage'));
         blocks.push('-');
@@ -2682,32 +2659,24 @@ SpriteMorph.prototype.blockTemplates = function (category = 'motion') {
         blocks.push(block('fork'));
         blocks.push(block('evaluate'));
         blocks.push('-');
-        //blocks.push(block('doTellTo'));
-        //blocks.push(block('reportAskFor'));
-        //blocks.push('-');
         blocks.push(block('doCallCC'));
         blocks.push(block('reportCallCC'));
         blocks.push('-');
-        /*blocks.push(block('receiveOnClone'));
-        blocks.push(block('createClone'));
-        blocks.push(block('newClone'));
-        blocks.push(block('removeClone'));
-        blocks.push('-');*/
         blocks.push(block('receiveOnScene'));
         blocks.push(block('doSwitchToScene'));
-        blocks.push('-');
-        blocks.push(block('doPauseAll'));
 
+        // for debugging: ///////////////
+        if (devMode) {
+            blocks.push('-');
+            blocks.push(this.devModeText());
+            blocks.push('-');
+            blocks.push(block('doPauseAll'));
+            blocks.push(block('doResumeAll'));
+            blocks.push(block('doStep'));
+            blocks.push(block('reportPaused'));
+	}
     } else if (category === 'IO') {
 
-        //blocks.push(block('reportTouchingObject'));
-        //blocks.push(block('reportTouchingColor'));
-        //blocks.push(block('reportColorIsTouchingColor'));
-        //blocks.push('-');
-        //blocks.push(block('doAsk'));
-        //blocks.push(watcherToggle('getLastAnswer'));
-        //blocks.push(block('getLastAnswer'));
-        //blocks.push('-');
         blocks.push(watcherToggle('reportMouseX'));
         blocks.push(block('reportMouseX'));
         blocks.push(watcherToggle('reportMouseY'));
@@ -2716,20 +2685,9 @@ SpriteMorph.prototype.blockTemplates = function (category = 'motion') {
         blocks.push('-');
         blocks.push(block('reportKeyPressed'));
         blocks.push('-');
-        //blocks.push(block('reportRelationTo'));
-        //blocks.push(block('reportAspect'));
-        //blocks.push('-');
         blocks.push(block('doResetTimer'));
         blocks.push(watcherToggle('getTimer'));
         blocks.push(block('getTimer'));
-        blocks.push('-');
-        //blocks.push(block('reportAttributeOf'));
-
-        if (false /*SpriteMorph.prototype.enableFirstClass*/) {
-            blocks.push(block('reportGet'));
-        }
-
-        //blocks.push(block('reportObject'));
         blocks.push('-');
         blocks.push(block('reportURL'));
         blocks.push(block('reportAudio'));
@@ -2827,17 +2785,9 @@ SpriteMorph.prototype.blockTemplates = function (category = 'motion') {
         }
 
         blocks.push(block('doSetVar'));
-        //blocks.push(block('doChangeVar'));
         blocks.push(block('doShowVar'));
         blocks.push(block('doHideVar'));
         blocks.push(block('doDeclareVariables'));
-
-        // inheritance:
-
-        if (false /*StageMorph.prototype.enableInheritance*/) {
-            blocks.push('-');
-            blocks.push(block('doDeleteAttr'));
-        }
     } else if (category === 'lists') {
 	
         blocks.push(block('reportNewList'));
@@ -2861,11 +2811,6 @@ SpriteMorph.prototype.blockTemplates = function (category = 'motion') {
         blocks.push(block('reportListCombination'));
         blocks.push(block('reportReshape'));
 	blocks.push(block('reportSlice'));
-        //blocks.push('-');
-        //blocks.push(block('doAddToList'));
-        //blocks.push(block('doDeleteFromList'));
-        //blocks.push(block('doInsertInList'));
-        //blocks.push(block('doReplaceInList'));
 
         // for debugging: ///////////////
         if (devMode) {
@@ -2895,7 +2840,7 @@ SpriteMorph.prototype.blockTemplates = function (category = 'motion') {
     return blocks;
 };
 
-// Utitlies displayed in the palette
+// Utilities displayed in the palette
 SpriteMorph.prototype.makeVariableButton = function () {
     var button, myself = this;
 
@@ -8859,14 +8804,10 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
     } else if (category === 'control') {
 
         blocks.push(block('receiveGo'));
-        //blocks.push(block('receiveKey'));
-        //blocks.push(block('receiveInteraction'));
-        //blocks.push(block('receiveCondition'));
         blocks.push('-');
         blocks.push(block('receiveMessage'));
         blocks.push(block('doBroadcast'));
         blocks.push(block('doBroadcastAndWait'));
-        //blocks.push(block('doSend'));
         blocks.push(watcherToggle('getLastMessage'));
         blocks.push(block('getLastMessage'));
         blocks.push('-');
@@ -8891,26 +8832,24 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
         blocks.push(block('fork'));
         blocks.push(block('evaluate'));
         blocks.push('-');
-        //blocks.push(block('doTellTo'));
-        //blocks.push(block('reportAskFor'));
-        //blocks.push('-');
         blocks.push(block('doCallCC'));
         blocks.push(block('reportCallCC'));
         blocks.push('-');
-        /*blocks.push(block('createClone'));
-        blocks.push(block('newClone'));
-        blocks.push('-');*/
         blocks.push(block('receiveOnScene'));
         blocks.push(block('doSwitchToScene'));
-        blocks.push('-');
-        blocks.push(block('doPauseAll'));
 
+        // for debugging: ///////////////
+        if (devMode) {
+            blocks.push('-');
+            blocks.push(this.devModeText());
+            blocks.push('-');
+            blocks.push(block('doPauseAll'));
+            blocks.push(block('doResumeAll'));
+            blocks.push(block('doStep'));
+            blocks.push(block('reportPaused'));
+	}
     } else if (category === 'IO') {
 
-        //blocks.push(block('doAsk'));
-        //blocks.push(watcherToggle('getLastAnswer'));
-        //blocks.push(block('getLastAnswer'));
-        //blocks.push('-');
         blocks.push(watcherToggle('reportMouseX'));
         blocks.push(block('reportMouseX'));
         blocks.push(watcherToggle('reportMouseY'));
@@ -8919,20 +8858,10 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
         blocks.push('-');
         blocks.push(block('reportKeyPressed'));
         blocks.push('-');
-        //blocks.push(block('reportAspect'));
-        //blocks.push('-');
         blocks.push(block('doResetTimer'));
         blocks.push(watcherToggle('getTimer'));
         blocks.push(block('getTimer'));
         blocks.push('-');
-        //blocks.push(block('reportAttributeOf'));
-
-        if (false /*SpriteMorph.prototype.enableFirstClass*/) {
-            blocks.push(block('reportGet'));
-        }
-
-        //blocks.push(block('reportObject'));
-        //blocks.push('-');
         blocks.push(block('reportURL'));
         blocks.push(block('reportAudio'));
         blocks.push(block('reportVideo'));
@@ -9032,7 +8961,6 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
         }
 
         blocks.push(block('doSetVar'));
-        //blocks.push(block('doChangeVar'));
         blocks.push(block('doShowVar'));
         blocks.push(block('doHideVar'));
         blocks.push(block('doDeclareVariables'));
@@ -9059,11 +8987,6 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
         blocks.push(block('reportListCombination'));
         blocks.push(block('reportReshape'));
         blocks.push(block('reportSlice'));
-        //blocks.push('-');
-        //blocks.push(block('doAddToList'));
-        //blocks.push(block('doDeleteFromList'));
-        //blocks.push(block('doInsertInList'));
-        //blocks.push(block('doReplaceInList'));
 
         // for debugging: ///////////////
         if (this.world().isDevMode) {
