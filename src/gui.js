@@ -255,7 +255,6 @@ IDE_Morph.prototype.init = function (isAutoFill) {
     this.currentSprite = this.scene.addDefaultSprite();
     this.sprites = this.scene.sprites;
     this.currentCategory = this.scene.unifiedPalette ? 'unified' : 'control';
-    this.unified = this.scene.unifiedPalette;
     this.currentTab = 'scripts';
 
     // logoURL is disabled because the image data is hard-copied
@@ -2957,8 +2956,8 @@ IDE_Morph.prototype.applySavedSettings = function () {
     }
 
     // unified palette
-    if (!isNil(multicat)) {
-        this.setUnifiedPalette(!multicat);
+    if (multicat) {
+        this.setUnifiedPalette(false);
     }
 };
 
