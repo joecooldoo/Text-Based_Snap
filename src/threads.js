@@ -2702,6 +2702,40 @@ Process.prototype.doPauseAll = function () {
     }
 };
 
+Process.prototype.doResumeAll = function () {
+    var stage, ide;
+    if (this.homeContext.receiver) {
+        stage = this.homeContext.receiver.parentThatIsA(StageMorph);
+        if (stage) {
+            stage.threads.resumeAll(stage);
+        }
+        ide = stage.parentThatIsA(IDE_Morph);
+        if (ide) {ide.controlBar.pauseButton.refresh(); }
+    }
+};
+
+Process.prototype.doStep = function () {
+    var stage, ide;
+    if (this.homeContext.receiver) {
+        stage = this.homeContext.receiver.parentThatIsA(StageMorph);
+        if (stage) {
+            stage.threads.step(stage);
+        }
+        ide = stage.parentThatIsA(IDE_Morph);
+        if (ide) {ide.controlBar.pauseButton.refresh(); }
+    }
+};
+
+Process.prototype.reportPaused = function () {
+    var stage, ide;
+    if (this.homeContext.receiver) {
+        stage = this.homeContext.receiver.parentThatIsA(StageMorph);
+        if (stage) {
+            return stage.threads.isPaused(stage);
+        }
+    }
+};
+
 // Process loop primitives
 
 Process.prototype.doForever = function (body) {
