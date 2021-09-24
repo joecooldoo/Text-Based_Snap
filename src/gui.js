@@ -2624,10 +2624,10 @@ IDE_Morph.prototype.scrollPaletteToCategory = function (category) {
     firstInCategory = palette.contents.children.find(
     // prevent switching to "other" category
     // going to WARP
-        function (block) {block.category === category &&
+        function (block) {console.log(block); return block.category === category &&
                           !['doWarp', 'reifyScript',
 			    'reifyReporter', 'reifyPredicate',
-			    'doDeclareVariables'].contains(block)}
+			    'doDeclareVariables'].includes(block)}
     );
 
     if (firstInCategory === undefined) {return; }
