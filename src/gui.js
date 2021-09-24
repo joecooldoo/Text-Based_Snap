@@ -4097,6 +4097,14 @@ IDE_Morph.prototype.settingsMenu = function () {
         'EXPERIMENTAL! check to enable\nsupport for compiling',
         true
     );
+    addPreference(
+        'Single palette',
+        () => this.toggleUnifiedPalette(),
+        this.scene.unifiedPalette,
+        'uncheck to show only the selected category\'s blocks',
+        'check to show all blocks in a single palette',
+        //true
+    );
     menu.addLine(); // everything below this line is stored in the project
     addPreference(
         'Thread safe scripts',
@@ -4155,14 +4163,6 @@ IDE_Morph.prototype.settingsMenu = function () {
         'uncheck to disable\nusing operators on lists and tables',
         'check to enable\nusing operators on lists and tables',
         false
-    );
-    addPreference(
-        'Single palette',
-        () => this.toggleUnifiedPalette(),
-        this.scene.unifiedPalette,
-        'uncheck to show only the selected category\'s blocks',
-        'check to show all blocks in a single palette',
-        //true
     );
     addPreference(
         'Persist linked sublist IDs',
