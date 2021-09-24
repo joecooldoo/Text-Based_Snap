@@ -234,7 +234,7 @@ SyntaxElementMorph.uber = Morph.prototype;
 
         labelFontName       - <string> specific font family name
         labelFontStyle      - <string> generic font family name, cascaded
-        fontSize            - duh
+        fontSize            - <number> obvious
         embossing           - <Point> offset for embossing effect
         labelWidth          - column width, used for word wrapping
         labelWordWrap       - <bool> if true labels can break after each word
@@ -909,6 +909,18 @@ SyntaxElementMorph.prototype.labelParts = {
     '%pause': {
         type: 'symbol',
         name: 'pause',
+        color: new Color(255, 220, 0),
+        tags: 'protected'
+    },
+    '%resume': {
+        type: 'symbol',
+        name: 'pointRight',
+        color: new Color(255, 220, 0),
+        tags: 'protected'
+    },
+    '%step': {
+        type: 'symbol',
+        name: 'stepForward',
         color: new Color(255, 220, 0),
         tags: 'protected'
     },
