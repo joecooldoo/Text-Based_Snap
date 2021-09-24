@@ -2956,9 +2956,10 @@ IDE_Morph.prototype.applySavedSettings = function () {
     }
 
     // unified palette
-    if (multicat) {
+    // has an issue, commented out for now
+    /*if (multicat) {
         this.setUnifiedPalette(false);
-    }
+    }*/
 };
 
 IDE_Morph.prototype.saveSetting = function (key, value) {
