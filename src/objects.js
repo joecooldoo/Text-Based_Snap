@@ -2834,7 +2834,7 @@ SpriteMorph.prototype.blockTemplates = function (category = 'motion') {
 
         // inheritance:
 
-        if (StageMorph.prototype.enableInheritance) {
+        if (false /*StageMorph.prototype.enableInheritance*/) {
             blocks.push('-');
             blocks.push(block('doDeleteAttr'));
         }
