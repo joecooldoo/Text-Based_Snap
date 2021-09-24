@@ -2622,17 +2622,16 @@ IDE_Morph.prototype.scrollPaletteToCategory = function (category) {
         palette = this.palette;
     };
     firstInCategory = palette.contents.children.find(block =>
-        {block.category === category});
+        block.category === category);
 
     if (firstInCategory === undefined) {
         if (category === 'other') {
-            firstInCategory = palette.contents.children.find(function (block)
-                {console.log(block); return block.category === 'lists';});
+            firstInCategory = palette.contents.children.find(block =>
+                block.category === 'lists');
 	} else {return; };
     };
     if (firstInCategory === undefined) {return; };
-    try {delta = palette.top() - firstInCategory.top() + palette.padding;}
-    catch (err) {console.log(err); return;};
+    delta = palette.top() - firstInCategory.top() + palette.padding;
     if (delta === 0) {return; }
     this.world().animations.push(new Animation(
         y => { // setter
