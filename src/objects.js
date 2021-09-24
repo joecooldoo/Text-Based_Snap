@@ -1173,45 +1173,77 @@ SpriteMorph.prototype.initBlocks = function () {
             spec: 'pick random %n to %n',
             defaults: [1, 10]
         },
-        reportEquals: {
+        reportComparison: {
+            type: 'predicate',
+            category: 'operators',
+            spec: '%s %comp %strs',
+            defaults: [null, ['=']]
+        },
+        reportEquals: { //deprecated
             type: 'predicate',
             category: 'operators',
             spec: '%s = %s'
         },
-        reportNotEquals: {
+        reportNotEquals: { //deprecated
             type: 'predicate',
             category: 'operators',
             spec: '%s \u2260 %s'
         },
-        reportLessThan: {
+        reportLessThan: { //deprecated
             type: 'predicate',
             category: 'operators',
             spec: '%s < %s'
         },
-        reportLessThanOrEquals: {
+        reportLessThanOrEquals: { //deprecated
             type: 'predicate',
             category: 'operators',
             spec: '%s \u2264 %s'
         },
-        reportGreaterThan: {
+        reportGreaterThan: { //deprecated
             type: 'predicate',
             category: 'operators',
             spec: '%s > %s'
         },
-        reportGreaterThanOrEquals: {
+        reportGreaterThanOrEquals: { //deprecated
             type: 'predicate',
             category: 'operators',
             spec: '%s \u2265 %s'
         },
-        reportAnd: {
+        reportCommutativeLogicGate: {
+            type: 'predicate',
+            category: 'operators',
+            spec: '%b %logic %bools',
+            defaults: [null, ['and']]
+        },
+        reportAnd: { //deprecated
             type: 'predicate',
             category: 'operators',
             spec: '%b and %b'
         },
-        reportOr: {
+        reportNand: { //deprecated
+            type: 'predicate',
+            category: 'operators',
+            spec: '%b nand %b'
+        },
+        reportOr: { //deprecated
             type: 'predicate',
             category: 'operators',
             spec: '%b or %b'
+        },
+        reportNor: { //deprecated
+            type: 'predicate',
+            category: 'operators',
+            spec: '%b nor %b'
+        },
+        reportXor: { //deprecated
+            type: 'predicate',
+            category: 'operators',
+            spec: '%b xor %b'
+        },
+        reportXnor: { //deprecated
+            type: 'predicate',
+            category: 'operators',
+            spec: '%b xnor %b'
         },
         reportNot: {
             type: 'predicate',
@@ -1596,44 +1628,89 @@ SpriteMorph.prototype.initBlockMigrations = function () {
             selector: 'receiveInteraction',
             inputs: [['clicked']]
         },
-	    /*
+	/*
 	    ###################################################################################################################################################################
 	    ###################################################################################################################################################################
 	    ###################################################################################################################################################################
 	    ###################################################################################################################################################################
-	    */
+	*/
         reportSum: {
             selector: 'reportCommutativeOperator',
-            inputs: [null, ['+']]
+            inputs: [['+']],
+            offset: 1
 	},
         reportProduct: {
             selector: 'reportCommutativeOperator',
-            inputs: [null, ['\u00D7']]
+            inputs: [['\u00D7']],
+            offset: 1
 	},
         reportMax: {
             selector: 'reportCommutativeOperator',
-            inputs: [null, ['max']]
+            inputs: [['max']],
+            offset: 1
 	},
         reportMin: {
             selector: 'reportCommutativeOperator',
-            inputs: [null, ['min']]
+            inputs: [['min']],
+            offset: 1
 	},
         reportDifference: {
             selector: 'reportNonCommutativeOperator',
-            inputs: [null, ['\u2212']]
+            inputs: [['\u2212']],
+            offset: 1
 	},
         reportQuotient: {
             selector: 'reportNonCommutativeOperator',
-            inputs: [null, ['÷']]
+            inputs: [['÷']],
+            offset: 1
 	},
         reportPower: {
             selector: 'reportNonCommutativeOperator',
-            inputs: [null, ['^']]
+            inputs: [['^']],
+            offset: 1
 	},
         reportModulus: {
             selector: 'reportNonCommutativeOperator',
-            inputs: [null, ['mod']]
+            inputs: [['mod']],
+            offset: 1
 	},
+	/////////////////////////////////////////////
+        reportEquals: {
+            selector: 'reportComparison',
+            inputs: [['=']],
+            offset: 1
+	},
+        reportNotEquals: {
+            selector: 'reportComparison',
+            inputs: [['\u2260']],
+            offset: 1
+	},
+        reportLessThan: {
+            selector: 'reportComparison',
+            inputs: [['<']],
+            offset: 1
+	},
+        reportLessThanOrEquals: {
+            selector: 'reportComparison',
+            inputs: [['\u2264']],
+            offset: 1
+	},
+        reportGreaterThan: {
+            selector: 'reportComparison',
+            inputs: [['>']],
+            offset: 1
+	},
+        reportGreaterThanOrEquals: {
+            selector: 'reportComparison',
+            inputs: [['\u2265']],
+            offset: 1
+	},
+        /*
+	    ###################################################################################################################################################################
+	    ###################################################################################################################################################################
+	    ###################################################################################################################################################################
+	    ###################################################################################################################################################################
+	*/
         reportTrue: {
             selector: 'reportBoolean',
             inputs: [true]
@@ -1823,13 +1900,13 @@ SpriteMorph.prototype.blockAlternatives = {
         'reportQuotient', 'reportModulus', 'reportAtan2', 'reportMin',
         'reportMax'],
     reportModulus: ['reportAtan2', 'reportDifference', 'reportProduct',
-        'reportSum','reportQuotient', 'reportPower', 'reportMin', 'reportMax'],*/
+        'reportSum','reportQuotient', 'reportPower', 'reportMin', 'reportMax'],
     reportAtan2: ['reportModulus', 'reportDifference', 'reportProduct',
         'reportSum','reportQuotient', 'reportPower', 'reportMin', 'reportMax'],
-    /*reportMin: ['reportMax', 'reportSum', 'reportDifference', 'reportProduct',
+    reportMin: ['reportMax', 'reportSum', 'reportDifference', 'reportProduct',
         'reportQuotient', 'reportPower', 'reportModulus', 'reportAtan2'],
     reportMax: ['reportMin', 'reportSum', 'reportDifference', 'reportProduct',
-        'reportQuotient', 'reportPower', 'reportModulus', 'reportAtan2'],*/
+        'reportQuotient', 'reportPower', 'reportModulus', 'reportAtan2'],
     reportLessThan: ['reportLessThanOrEquals', 'reportEquals',
         'reportNotEquals', 'reportGreaterThan', 'reportGreaterThanOrEquals'],
     reportEquals: ['reportIsIdentical', 'reportNotEquals', 'reportLessThan',
@@ -1851,7 +1928,7 @@ SpriteMorph.prototype.blockAlternatives = {
         'reportLessThanOrEquals', 'reportGreaterThan',
         'reportGreaterThanOrEquals'],
     reportAnd: ['reportOr'],
-    reportOr: ['reportAnd'],
+    reportOr: ['reportAnd'],*/
 
     // variables
     //doSetVar: ['doChangeVar'],
@@ -2685,13 +2762,10 @@ SpriteMorph.prototype.blockTemplates = function (category = 'motion') {
         blocks.push(block('reportMonadic'));
         blocks.push(block('reportRandom'));
         blocks.push('-');
-        blocks.push(block('reportLessThan'));
-        blocks.push(block('reportEquals'));
-        blocks.push(block('reportGreaterThan'));
+        blocks.push(block('reportComparison'));
         blocks.push(block('reportIsIdentical'));
         blocks.push('-');
-        blocks.push(block('reportAnd'));
-        blocks.push(block('reportOr'));
+        blocks.push(block('reportCommutativeLogicGate'));
         blocks.push(block('reportNot'));
         blocks.push(block('reportBoolean'));
         blocks.push('-');
@@ -2715,7 +2789,7 @@ SpriteMorph.prototype.blockTemplates = function (category = 'motion') {
             }
         }
         // for debugging: ///////////////
-        if (true /*devMode*/) {
+        if (devMode) {
             //blocks.push('-');
             //blocks.push(this.devModeText());
             //blocks.push('-');
@@ -8891,13 +8965,10 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
         blocks.push(block('reportMonadic'));
         blocks.push(block('reportRandom'));
         blocks.push('-');
-        blocks.push(block('reportLessThan'));
-        blocks.push(block('reportEquals'));
-        blocks.push(block('reportGreaterThan'));
+        blocks.push(block('reportComparison'));
         blocks.push(block('reportIsIdentical'));
         blocks.push('-');
-        blocks.push(block('reportAnd'));
-        blocks.push(block('reportOr'));
+        blocks.push(block('reportCommutativeLogicGate'));
         blocks.push(block('reportNot'));
         blocks.push(block('reportBoolean'));
         blocks.push('-');
@@ -8922,7 +8993,7 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
         }
 
         // for debugging: ///////////////
-        if (false /*this.world().isDevMode*/) {
+        if (this.world().isDevMode) {
             //blocks.push('-');
             //blocks.push(this.devModeText());
             //blocks.push('-');
@@ -9001,10 +9072,10 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
 	if (this.world().isDevMode) {
             blocks.push(block('doApplyExtension'));
             blocks.push(block('reportApplyExtension'));
-	    blocks.push('=');
         }
 
         if (StageMorph.prototype.enableCodeMapping) {
+	    blocks.push('=');
             blocks.push(block('doMapCodeOrHeader'));
             blocks.push(block('doMapValueCode'));
             blocks.push(block('doMapListCode'));
