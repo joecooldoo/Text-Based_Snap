@@ -5925,8 +5925,8 @@ IDE_Morph.prototype.switchToDevMode = function () {
     world.isDevMode = true;
     Process.prototype.isCatchingErrors = false;
     this.controlBar.updateLabel();
-    this.isAutoFill = false;
-    this.isDraggable = true;
+    this.isAutoFill = true; // was false
+    this.isDraggable = false; // was true
     this.setExtent(world.extent().subtract(100));
     this.setPosition(world.position().add(20));
     this.flushBlocksCache();
@@ -6237,7 +6237,7 @@ IDE_Morph.prototype.setUnifiedPalette = function (bool) {
         return false;
     }
     this.scene.unifiedPalette = bool;
-    this.currentCategory = bool ? 'unified' : 'motion';
+    this.currentCategory = bool ? 'unified' : 'control';
     this.createCategories();
     this.createPaletteHandle();
     this.categories.fixLayout();
