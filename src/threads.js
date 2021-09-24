@@ -4179,20 +4179,25 @@ Process.prototype.reportBasicMax = function (a, b) {
 
 // Process logic primitives - hyper-diadic / monadic where applicable
 
-Process.prototype.reportComparison = function (a, comp, b) {
+Process.prototype.reportCommutativeComparison = function (a, comp, b) {
     switch (comp[0]) {
         case '=':
             return this.reportListAggregation(this.reportCONS(a, b), 'reportEquals');
-        case '<':
-            return this.reportListAggregation(this.reportCONS(a, b), 'reportLessThan');
-        case '>':
-            return this.reportListAggregation(this.reportCONS(a, b), 'reportGreaterThan');
         case '\u2260':
             return this.reportListAggregation(this.reportCONS(a, b), 'reportNotEquals');
+    }
+};
+
+Process.prototype.reportNonCommutativeComparison = function (a, comp, b) {
+    switch (comp[0]) {
+        case '<':
+            return this.reportLessThan(a, b);
+        case '>':
+            return this.reportGreaterThan(a, b);
         case '\u2265':
-            return this.reportListAggregation(this.reportCONS(a, b), 'reportGreaterThanOrEquals');
+            return this.reportGreaterThanOrEquals(a, b);
         case '\u2264':
-            return this.reportListAggregation(this.reportCONS(a, b), 'reportLessThanOrEquals');
+            return this.reportLessThanOrEquals(a, b);
     }
 };
 
