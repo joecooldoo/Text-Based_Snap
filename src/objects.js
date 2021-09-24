@@ -2716,9 +2716,9 @@ SpriteMorph.prototype.blockTemplates = function (category = 'motion') {
         blocks.push('-');
         blocks.push(block('reportKeyPressed'));
         blocks.push('-');
-        blocks.push(block('reportRelationTo'));
-        blocks.push(block('reportAspect'));
-        blocks.push('-');
+        //blocks.push(block('reportRelationTo'));
+        //blocks.push(block('reportAspect'));
+        //blocks.push('-');
         blocks.push(block('doResetTimer'));
         blocks.push(watcherToggle('getTimer'));
         blocks.push(block('getTimer'));
@@ -2740,8 +2740,6 @@ SpriteMorph.prototype.blockTemplates = function (category = 'motion') {
         blocks.push(block('doSetGlobalFlag'));
         blocks.push('-');
         blocks.push(block('reportDate'));
-        blocks.push('-');
-        blocks.push(block('reportFrameCount'));
 
         // for debugging: ///////////////
         if (devMode) {
@@ -2751,7 +2749,7 @@ SpriteMorph.prototype.blockTemplates = function (category = 'motion') {
             blocks.push(watcherToggle('reportThreadCount'));
             blocks.push(block('reportThreadCount'));
             blocks.push(block('reportStackSize'));
-            //blocks.push(block('reportFrameCount'));
+            blocks.push(block('reportFrameCount'));
             blocks.push(block('reportYieldCount'));
         }
     } else if (category === 'operators') {
@@ -8921,8 +8919,8 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
         blocks.push('-');
         blocks.push(block('reportKeyPressed'));
         blocks.push('-');
-        blocks.push(block('reportAspect'));
-        blocks.push('-');
+        //blocks.push(block('reportAspect'));
+        //blocks.push('-');
         blocks.push(block('doResetTimer'));
         blocks.push(watcherToggle('getTimer'));
         blocks.push(block('getTimer'));
@@ -8944,8 +8942,6 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
         blocks.push(block('doSetGlobalFlag'));
         blocks.push('-');
         blocks.push(block('reportDate'));
-        blocks.push('-');
-        blocks.push(block('reportFrameCount'));
 
         // for debugging: ///////////////
         if (this.world().isDevMode) {
@@ -8955,6 +8951,7 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
             blocks.push(watcherToggle('reportThreadCount'));
             blocks.push(block('reportThreadCount'));
             blocks.push(block('reportStackSize'));
+            blocks.push(block('reportFrameCount'));
             blocks.push(block('reportYieldCount'));
         }
     }
