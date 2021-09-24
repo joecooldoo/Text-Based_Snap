@@ -854,7 +854,7 @@ SpriteMorph.prototype.initBlocks = function () {
         },
         doWarp: {
             type: 'command',
-            category: 'other',
+            category: 'control',
             spec: 'warp %c'
         },
 
@@ -1078,19 +1078,19 @@ SpriteMorph.prototype.initBlocks = function () {
         // Operators
         reifyScript: {
             type: 'ring',
-            category: 'other',
+            category: 'operators',
             spec: '%rc %ringparms',
             alias: 'command ring lambda'
         },
         reifyReporter: {
             type: 'ring',
-            category: 'other',
+            category: 'operators',
             spec: '%rr %ringparms',
             alias: 'reporter ring lambda'
         },
         reifyPredicate: {
             type: 'ring',
-            category: 'other',
+            category: 'operators',
             spec: '%rp %ringparms',
             alias: 'predicate ring lambda'
         },
@@ -1369,7 +1369,7 @@ SpriteMorph.prototype.initBlocks = function () {
         },
         doDeclareVariables: {
             type: 'command',
-            category: 'other',
+            category: 'variables',
             spec: 'script variables %scriptVars'
         },
 
