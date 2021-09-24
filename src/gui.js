@@ -2627,10 +2627,11 @@ IDE_Morph.prototype.scrollPaletteToCategory = function (category) {
     if (firstInCategory === null) {
         if (category === 'other') {
             firstInCategory = palette.contents.children.find(function (block)
-                {console.log(block.category); return block.category === 'lists';});
+                {console.log(block); return block.category === 'lists';});
 	} else {return; };
     };
-    delta = palette.top() - firstInCategory.top() + palette.padding;
+    try {delta = palette.top() - firstInCategory.top() + palette.padding;}
+    catch (err) {console.log(err); return;};
     if (delta === 0) {return; }
     this.world().animations.push(new Animation(
         y => { // setter
