@@ -1173,11 +1173,17 @@ SpriteMorph.prototype.initBlocks = function () {
             spec: 'pick random %n to %n',
             defaults: [1, 10]
         },
-        reportComparison: {
+        reportCommutativeComparison: {
             type: 'predicate',
             category: 'operators',
-            spec: '%s %comp %strs',
+            spec: '%s %ccomp %strs',
             defaults: [null, ['=']]
+        },
+        reportNonCommutativeComparison: {
+            type: 'predicate',
+            category: 'operators',
+            spec: '%s %nccomp %s',
+            defaults: [null, ['<']]
         },
         reportEquals: { //deprecated
             type: 'predicate',
@@ -1676,32 +1682,32 @@ SpriteMorph.prototype.initBlockMigrations = function () {
 	},
 	/////////////////////////////////////////////
         reportEquals: {
-            selector: 'reportComparison',
+            selector: 'reportCommutativeComparison',
             inputs: [['=']],
             offset: 1
 	},
         reportNotEquals: {
-            selector: 'reportComparison',
+            selector: 'reportCommutativeComparison',
             inputs: [['\u2260']],
             offset: 1
 	},
         reportLessThan: {
-            selector: 'reportComparison',
+            selector: 'reportNonCommutativeComparison',
             inputs: [['<']],
             offset: 1
 	},
         reportLessThanOrEquals: {
-            selector: 'reportComparison',
+            selector: 'reportNonCommutativeComparison',
             inputs: [['\u2264']],
             offset: 1
 	},
         reportGreaterThan: {
-            selector: 'reportComparison',
+            selector: 'reportNonCommutativeComparison',
             inputs: [['>']],
             offset: 1
 	},
         reportGreaterThanOrEquals: {
-            selector: 'reportComparison',
+            selector: 'reportNonCommutativeComparison',
             inputs: [['\u2265']],
             offset: 1
 	},
@@ -2762,7 +2768,8 @@ SpriteMorph.prototype.blockTemplates = function (category = 'motion') {
         blocks.push(block('reportMonadic'));
         blocks.push(block('reportRandom'));
         blocks.push('-');
-        blocks.push(block('reportComparison'));
+        blocks.push(block('reportCommutativeComparison'));
+        blocks.push(block('reportNonCommutativeComparison'));
         blocks.push(block('reportIsIdentical'));
         blocks.push('-');
         blocks.push(block('reportCommutativeLogicGate'));
@@ -8965,7 +8972,8 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
         blocks.push(block('reportMonadic'));
         blocks.push(block('reportRandom'));
         blocks.push('-');
-        blocks.push(block('reportComparison'));
+        blocks.push(block('reportCommutativeComparison'));
+        blocks.push(block('reportNonCommutativeComparison'));
         blocks.push(block('reportIsIdentical'));
         blocks.push('-');
         blocks.push(block('reportCommutativeLogicGate'));
