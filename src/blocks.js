@@ -618,12 +618,18 @@ SyntaxElementMorph.prototype.labelParts = {
             mod : ['mod']
 	}
     },
-    '%comp': {
+    '%ccomp': {
         type: 'input',
         tags: 'read-only static',
         menu: {
             '=' : ['='],
-            '\u2260' : ['\u2260'],
+            '\u2260' : ['\u2260']
+	}
+    },
+    '%nccomp': {
+        type: 'input',
+        tags: 'read-only static',
+        menu: {
             '<' : ['<'],
             '\u2264' : ['\u2264'],
             '>' : ['>'],
