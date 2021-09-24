@@ -2627,7 +2627,7 @@ IDE_Morph.prototype.scrollPaletteToCategory = function (category) {
     firstInCategory = palette.contents.children.find(
     // prevent going to WARP when
     // switching to "other" category
-        function (block) {block.category === category &&
+        function (block) {return block.category === category &&
                           /*(category === "other" && // doesn't work, commented out
 			   SpriteMorph.prototype.customBlockTemplatesForCategory('other').map((element, index) => element === otherExceptions[index]).reduce((a, b) => a && b)
 			   ? "lists" : category) &&*/
