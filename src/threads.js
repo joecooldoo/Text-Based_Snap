@@ -833,7 +833,43 @@ Process.prototype.reportApplyExtension = function (prim, args) {
 
 // Process: Special Forms Blocks Primitives
 
-Process.prototype.reportOr = function (block) {
+Process.prototype.reportCommutativeLogicGate = function (a, gate, b) {
+    switch (gate[0]) {
+        case 'or':
+            return this.reportListAggregation(this.reportCONS(a, b), 'reportOr');
+        case 'and':
+            return this.reportListAggregation(this.reportCONS(a, b), 'reportAnd');
+        case 'xor':
+            return this.reportListAggregation(this.reportCONS(a, b), 'reportXor');
+        case 'nor':
+            return this.reportListAggregation(this.reportCONS(a, b), 'reportNor');
+        case 'nand':
+            return this.reportListAggregation(this.reportCONS(a, b), 'reportNand');
+        case 'xnor':
+            return this.reportListAggregation(this.reportCONS(a, b), 'reportXnor');
+    }
+};
+
+Process.prototype.reportOr = function (a, b) {
+    return !!(a || b);
+};
+Process.prototype.reportAnd = function (a, b) {
+    return !!(a && b);
+};
+Process.prototype.reportXor = function (a, b) {
+    return !!(!a ^ !b);
+};
+Process.prototype.reportNor = function (a, b) {
+    return !(a || b);
+};
+Process.prototype.reportNand = function (a, b) {
+    return !(a && b);
+};
+Process.prototype.reportXnor = function (a, b) {
+    return !(!a ^ !b);
+};
+
+/*Process.prototype.reportOr = function (block) {
     var inputs = this.context.inputs;
 
     if (inputs.length < 1) {
@@ -876,6 +912,78 @@ Process.prototype.reportAnd = function (block) {
         this.popContext();
     }
 };
+
+Process.prototype.reportXor = function (block) {
+    var inputs = this.context.inputs;
+
+    if (inputs.length < 2) {
+        // this.assertType(inputs[0], 'Boolean');
+        this.evaluateNextInput(block);
+    } else {
+        // this.assertType(inputs[1], 'Boolean');
+        if (this.flashContext()) {return; }
+        this.returnValueToParentContext(inputs[0] !== inputs[1]);
+        this.popContext();
+    }
+};
+
+Process.prototype.reportNor = function (block) {
+    var inputs = this.context.inputs;
+
+    if (inputs.length < 1) {
+        this.evaluateNextInput(block);
+    } else if (inputs.length === 1) {
+        // this.assertType(inputs[0], 'Boolean');
+        if (inputs[0]) {
+            if (this.flashContext()) {return; }
+            this.returnValueToParentContext(false);
+            this.popContext();
+        } else {
+            this.evaluateNextInput(block);
+        }
+    } else {
+        // this.assertType(inputs[1], 'Boolean');
+        if (this.flashContext()) {return; }
+        this.returnValueToParentContext(inputs[1] === false);
+        this.popContext();
+    }
+};
+
+Process.prototype.reportNand = function (block) {
+    var inputs = this.context.inputs;
+
+    if (inputs.length < 1) {
+        this.evaluateNextInput(block);
+    } else if (inputs.length === 1) {
+        // this.assertType(inputs[0], 'Boolean');
+        if (!inputs[0]) {
+            if (this.flashContext()) {return; }
+            this.returnValueToParentContext(true);
+            this.popContext();
+        } else {
+            this.evaluateNextInput(block);
+        }
+    } else {
+        // this.assertType(inputs[1], 'Boolean');
+        if (this.flashContext()) {return; }
+        this.returnValueToParentContext(inputs[1] === false);
+        this.popContext();
+    }
+};
+
+Process.prototype.reportXnor = function (block) {
+    var inputs = this.context.inputs;
+
+    if (inputs.length < 2) {
+        // this.assertType(inputs[0], 'Boolean');
+        this.evaluateNextInput(block);
+    } else {
+        // this.assertType(inputs[1], 'Boolean');
+        if (this.flashContext()) {return; }
+        this.returnValueToParentContext(inputs[0] === inputs[1]);
+        this.popContext();
+    }
+};*/
 
 Process.prototype.doReport = function (block) {
     var outer = this.context.outerContext;
@@ -1853,7 +1961,7 @@ Process.prototype.doChangePrimitiveVisibility = function (aBlock, hideIt) {
         doDeclareVariables: 'variables'
     };
     cat = dict[this.selector] || this.category;
-    if (cat === 'lists') {cat = 'variables'; }
+    //if (cat === 'lists') {cat = 'variables'; }
     ide.flushBlocksCache(cat);
     ide.refreshPalette();
 };
@@ -4071,6 +4179,23 @@ Process.prototype.reportBasicMax = function (a, b) {
 
 // Process logic primitives - hyper-diadic / monadic where applicable
 
+Process.prototype.reportComparison = function (a, comp, b) {
+    switch (comp[0]) {
+        case '=':
+            return this.reportListAggregation(this.reportCONS(a, b), 'reportEquals');
+        case '<':
+            return this.reportListAggregation(this.reportCONS(a, b), 'reportLessThan');
+        case '>':
+            return this.reportListAggregation(this.reportCONS(a, b), 'reportGreaterThan');
+        case '\u2260':
+            return this.reportListAggregation(this.reportCONS(a, b), 'reportNotEquals');
+        case '\u2265':
+            return this.reportListAggregation(this.reportCONS(a, b), 'reportGreaterThanOrEquals');
+        case '\u2264':
+            return this.reportListAggregation(this.reportCONS(a, b), 'reportLessThanOrEquals');
+    }
+};
+
 Process.prototype.reportLessThan = function (a, b) {
     return this.hyperDyadic(this.reportBasicLessThan, a, b);
 };
@@ -4201,7 +4326,7 @@ Process.prototype.reportMonadic = function (fname, n) {
     case 'abs':
         result = Math.abs(x);
         break;
-    // case '\u2212': // minus-sign
+    case '\u2212': // minus-sign
     case 'neg':
         result = n * -1;
         break;
@@ -4296,13 +4421,13 @@ Process.prototype.reportTextFunction = function (fname, string) {
     return result;
 };
 
-Process.prototype.reportJoin = function (a, b) {
+/*Process.prototype.reportJoin = function (a, b) {
     var x = (isNil(a) ? '' : a).toString(),
         y = (isNil(b) ? '' : b).toString();
     return x.concat(y);
-};
+};*/
 
-Process.prototype.reportJoinWords = function (aList) {
+Process.prototype.reportJoin = function (aList) {
     if (aList instanceof List) {
         return aList.asText();
     }
