@@ -2624,7 +2624,7 @@ IDE_Morph.prototype.scrollPaletteToCategory = function (category) {
     firstInCategory = palette.contents.children.find(
     // prevent going to WARP when
     // switching to "other" category
-        function (block) {/*console.log(block); return */block.category === category &&
+        function (block) {console.log(block.selector); return block.category === category &&
                           !['doWarp', 'reifyScript',
 			    'reifyReporter', 'reifyPredicate',
 			    'doDeclareVariables'].includes(block.selector)}
