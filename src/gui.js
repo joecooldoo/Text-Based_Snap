@@ -254,7 +254,8 @@ IDE_Morph.prototype.init = function (isAutoFill) {
     this.globalVariables = this.scene.globalVariables;
     this.currentSprite = this.scene.addDefaultSprite();
     this.sprites = this.scene.sprites;
-    this.currentCategory = this.scene.unifiedPalette ? 'unified' : 'motion';
+    this.currentCategory = this.scene.unifiedPalette ? 'unified' : 'control';
+    this.unified = this.scene.unifiedPalette;
     this.currentTab = 'scripts';
 
     // logoURL is disabled because the image data is hard-copied
@@ -2870,7 +2871,8 @@ IDE_Morph.prototype.applySavedSettings = function () {
         tables = this.getSetting('tables'),
         tableLines = this.getSetting('tableLines'),
         autoWrapping = this.getSetting('autowrapping'),
-        solidshadow = this.getSetting('solidshadow');
+        solidshadow = this.getSetting('solidshadow'),
+        onecat = this.getSetting('onecat');
 
     // design
     if (design === 'flat') {
@@ -2951,6 +2953,12 @@ IDE_Morph.prototype.applySavedSettings = function () {
     // solid shadow
     if (solidshadow) {
         window.useBlurredShadows = false;
+        this.rerender();
+    }
+
+    // unified palette
+    if (onecat) {
+        this.unified = true;
         this.rerender();
     }
 };
@@ -6238,6 +6246,11 @@ IDE_Morph.prototype.toggleStageSize = function (isSmall, forcedRatio) {
 
 IDE_Morph.prototype.toggleUnifiedPalette = function () {
     this.setUnifiedPalette(!this.scene.unifiedPalette);
+    if (this.scene.unifiedPalette) {
+        this.saveSetting('onecat', true);
+    } else {
+        this.removeSetting('onecat');
+    }
 };
 
 IDE_Morph.prototype.setUnifiedPalette = function (bool) {
