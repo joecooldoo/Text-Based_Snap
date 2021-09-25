@@ -128,7 +128,7 @@
 
         selector    - indicating the name of the function it triggers,
 
-    Its arguments are first evaluated and then passed along    as the
+    Its arguments are first evaluated and then passed along as the
     selector is called. Arguments can be either instances of ArgMorph
     or ReporterBlockMorph. The getter method for a block's arguments is
 
@@ -1687,7 +1687,7 @@ SyntaxElementMorph.prototype.labelPart = function (spec) {
             break;
         case 'ring':
             part = new RingMorph();
-            part.color = SpriteMorph.prototype.blockColor.other;
+            part.color = SpriteMorph.prototype.blockColor.operators;
             part.selector = info.selector;
             part.setSpec(info.spec);
             part.isDraggable = true;
@@ -2835,21 +2835,7 @@ BlockMorph.prototype.userMenu = function () {
         'showHelp'
     );
     if (this.isTemplate) {
-        if (this.parent instanceof SyntaxElementMorph) { // in-line
-            if (this.selector === 'reportGetVar') { // script var definition
-                menu.addLine();
-                menu.addItem(
-                    'rename...',
-                    () => this.refactorThisVar(true), // just the template
-                    'rename only\nthis reporter'
-                );
-                menu.addItem(
-                    'rename all...',
-                    'refactorThisVar',
-                    'rename all blocks that\naccess this variable'
-                );
-            }
-        } else { // in palette
+        if (!(this.parent instanceof SyntaxElementMorph)) { // in palette
             if (this.selector === 'reportGetVar') {
                 rcvr = this.scriptTarget();
                 if (this.isInheritedVariable(false)) { // fully inherited
@@ -2879,17 +2865,6 @@ BlockMorph.prototype.userMenu = function () {
                         this.isTransientVariable(),
                         'uncheck to save contents\nin the project',
                         'check to prevent contents\nfrom being saved'
-                    );
-                    menu.addLine();
-                    menu.addItem(
-                        'rename...',
-                        () => this.refactorThisVar(true), // just the template
-                        'rename only\nthis reporter'
-                    );
-                    menu.addItem(
-                        'rename all...',
-                        'refactorThisVar',
-                        'rename all blocks that\naccess this variable'
                     );
                 }
             } else if (this.selector !== 'evaluateCustomBlock') {
@@ -2941,13 +2916,7 @@ BlockMorph.prototype.userMenu = function () {
         return menu;
     }
     menu.addLine();
-    if (this.selector === 'reportGetVar') {
-        menu.addItem(
-            'rename...',
-            renameVar,
-            'rename only\nthis reporter'
-        );
-    } else if (SpriteMorph.prototype.blockAlternatives[this.selector]) {
+    if (SpriteMorph.prototype.blockAlternatives[this.selector]) {
         menu.addItem(
             'relabel...',
             () => this.relabel(
@@ -3180,8 +3149,7 @@ BlockMorph.prototype.userMenu = function () {
     if (this.parent.parentThatIsA(RingMorph)) {
         menu.addLine();
         menu.addItem("unringify", 'unringify');
-        if (this instanceof ReporterBlockMorph ||
-                (!(top instanceof HatBlockMorph))) {
+        if (this instanceof ReporterBlockMorph) {
             menu.addItem("ringify", 'ringify');
         }
         return menu;
@@ -3198,13 +3166,6 @@ BlockMorph.prototype.userMenu = function () {
                 "senders..." : "receivers..."),
             'showMessageUsers'
         );
-    }
-    if (this.parent instanceof ReporterSlotMorph
-            || (this.parent instanceof CommandSlotMorph)
-            || (this instanceof HatBlockMorph)
-            || (this instanceof CommandBlockMorph
-                && (top instanceof HatBlockMorph))) {
-        return menu;
     }
     if (!hasLine) {menu.addLine(); }
     menu.addItem("ringify", 'ringify');
@@ -6613,7 +6574,7 @@ function RingMorph() {
 
 RingMorph.prototype.init = function () {
     RingMorph.uber.init.call(this);
-    this.category = 'other';
+    this.category = 'operators';
     this.contrast = RingMorph.prototype.contrast;
     this.setExtent(new Point(200, 80));
 };
@@ -6688,7 +6649,7 @@ RingMorph.prototype.embed = function (aBlock, inputNames, noVanish) {
     var slot;
 
     // set my color
-    this.color = SpriteMorph.prototype.blockColor.other;
+    this.color = SpriteMorph.prototype.blockColor.operators;
     this.isDraggable = true;
 
     // set my type, selector, and nested block:
@@ -12717,7 +12678,7 @@ ReporterSlotMorph.prototype.fixLayout = function () {
     predicates (diamond)
 
     evaluate() returns my nested block or null
-    (inherited from ReporterSlotMorph
+    (inherited from ReporterSlotMorph)
 */
 
 // ReporterSlotMorph inherits from FunctionSlotMorph:
