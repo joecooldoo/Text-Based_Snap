@@ -702,7 +702,7 @@ IDE_Morph.prototype.buildPanes = function () {
     this.createPalette();
     this.createStage();
     //this.createSpriteBar();
-    //this.createSpriteEditor();
+    this.createSpriteEditor();
     //this.createCorralBar();
     //this.createCorral();
 };
