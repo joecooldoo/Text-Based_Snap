@@ -2197,7 +2197,7 @@ IDE_Morph.prototype.fixLayout = function (situation) {
                 this.fixLayout();
             }
             //this.stageHandle.fixLayout();
-            this.paletteHandle.fixLayout();
+            //this.paletteHandle.fixLayout();
         }
 
         // spriteBar
