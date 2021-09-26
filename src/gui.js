@@ -2307,7 +2307,7 @@ IDE_Morph.prototype.setExtent = function (point) {
 
     // adjust stage ratio if necessary
     maxWidth = ext.x -
-        (200 + this.spriteBar.tabBar.width() + (this.padding * 2));
+        (200 + /*this.spriteBar.tabBar.width()*/ + (this.padding * 2));
     minWidth = SpriteIconMorph.prototype.thumbSize.x * 3;
     maxHeight = (ext.y - SpriteIconMorph.prototype.thumbSize.y * 3.5);
     minRatio = minWidth / this.stage.dimensions.x;
