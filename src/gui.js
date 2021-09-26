@@ -2196,7 +2196,7 @@ IDE_Morph.prototype.fixLayout = function (situation) {
                 this.paletteWidth = maxPaletteWidth;
                 this.fixLayout();
             }
-            this.stageHandle.fixLayout();
+            //this.stageHandle.fixLayout();
             this.paletteHandle.fixLayout();
         }
 
