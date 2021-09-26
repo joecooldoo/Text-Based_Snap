@@ -2189,7 +2189,7 @@ IDE_Morph.prototype.fixLayout = function (situation) {
                 200,
                 this.width() -
                     this.stage.width() -
-                    this.spriteBar.tabBar.width() -
+                    /*this.spriteBar.tabBar.width() -*/
                     (this.padding * 2)
             );
             if (this.paletteWidth > maxPaletteWidth) {
@@ -2201,17 +2201,17 @@ IDE_Morph.prototype.fixLayout = function (situation) {
         }
 
         // spriteBar
-        this.spriteBar.setLeft(this.paletteWidth + padding);
-        this.spriteBar.setTop(this.logo.bottom() + padding);
-        this.spriteBar.setExtent(new Point(
-            Math.max(0, this.stage.left() - padding - this.spriteBar.left()),
-            //this.categories.bottom() - this.spriteBar.top() - padding - 8
-            this.spriteBar.top() + 44
-        ));
-        this.spriteBar.fixLayout();
+        //this.spriteBar.setLeft(this.paletteWidth + padding);
+        //this.spriteBar.setTop(this.logo.bottom() + padding);
+        //this.spriteBar.setExtent(new Point(
+        //    Math.max(0, this.stage.left() - padding - this.spriteBar.left()),
+        //    //this.categories.bottom() - this.spriteBar.top() - padding - 8
+        //    this.spriteBar.top() + 44
+        //));
+        //this.spriteBar.fixLayout();
 
         // spriteEditor
-        if (this.spriteEditor.isVisible) {
+        /*if (this.spriteEditor.isVisible) {
             this.spriteEditor.setPosition(new Point(
                 this.spriteBar.left(),
                 this.spriteBar.bottom() + padding
@@ -2220,10 +2220,10 @@ IDE_Morph.prototype.fixLayout = function (situation) {
                 this.spriteBar.width(),
                 this.bottom() - this.spriteEditor.top()
             ));
-        }
+        }*/
 
         // corralBar
-        this.corralBar.setLeft(this.stage.left());
+        /*this.corralBar.setLeft(this.stage.left());
         this.corralBar.setTop(this.stage.bottom() + padding);
         this.corralBar.setWidth(this.stage.width());
 
@@ -2233,7 +2233,7 @@ IDE_Morph.prototype.fixLayout = function (situation) {
             this.corral.setWidth(this.stage.width());
             this.corral.setHeight(this.bottom() - this.corral.top());
             this.corral.fixLayout();
-        }
+        }*/
     }
 };
 
