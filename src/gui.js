@@ -701,10 +701,10 @@ IDE_Morph.prototype.buildPanes = function () {
     this.createCategories();
     this.createPalette();
     this.createStage();
-    this.createSpriteBar();
-    this.createSpriteEditor();
-    this.createCorralBar();
-    this.createCorral();
+    //this.createSpriteBar();
+    //this.createSpriteEditor();
+    //this.createCorralBar();
+    //this.createCorral();
 };
 
 IDE_Morph.prototype.createLogo = function () {
