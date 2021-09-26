@@ -46,7 +46,7 @@
 
 */
 
-/*global modules, VariableFrame, StageMorph, SpriteMorph, Process, List,
+/*global modules, VariableFrame, ScrollFrameMorph, SpriteMorph, Process, List,
 normalizeCanvas, SnapSerializer, Costume*/
 
 /*jshint esversion: 6*/
@@ -84,9 +84,6 @@ function Project(scenes, current) {
 
     // for deserializing - do not persist
     this.sceneIdx = null;
-
-    // for undeleting scenes - do not persist
-    this.trash = [];
 }
 
 Project.prototype.initialize = function () {
@@ -98,7 +95,6 @@ Project.prototype.initialize = function () {
 
 Project.prototype.addDefaultScene = function () {
     var scene = new Scene();
-    scene.addDefaultSprite();
     this.scenes.add(scene);
 };
 
@@ -111,18 +107,14 @@ Project.prototype.addDefaultScene = function () {
 
 // Scene instance creation:
 
-function Scene(aStageMorph) {
+function Scene(aScrollFrameMorph) {
     this.name = '';
     this.notes = '';
-    this.globalVariables = aStageMorph ?
-        aStageMorph.globalVariables() : new VariableFrame();
-    this.stage = aStageMorph || new StageMorph(this.globalVariables);
+    this.globalVariables = aScrollFrameMorph ?
+        aScrollFrameMorph.globalVariables() : new VariableFrame();
+    this.stage = aScrollFrameMorph || new ScrollFrameMorph(this.globalVariables);
     this.hasUnsavedEdits = false;
     this.unifiedPalette = true;
-
-    // cached IDE state
-    this.sprites = new List();
-    this.currentSprite = null;
 
     // global settings (shared)
     this.hiddenPrimitives = {};
@@ -132,52 +124,19 @@ function Scene(aStageMorph) {
 
     // global settings (copied)
     this.enableCodeMapping = false;
-    this.enableInheritance = true;
     this.enableSublistIDs = false;
-    this.enablePenLogging = false;
-    this.useFlatLineEnds = false;
     this.enableLiveCoding = false;
     this.enableHyperOps = true;
 
     // for deserializing - do not persist
-    this.spritesDict = {};
     this.targetStage = null;
-    this.spriteIdx = null;
-
-    // for undeleting sprites - do not persist
-    this.trash = [];
 }
 
 Scene.prototype.initialize = function () {
     // initialize after deserializing
     // only to be called by store
-    var objs = this.stage.children.filter(
-        child => child instanceof SpriteMorph
-    );
-    objs.sort((x, y) => x.idx - y.idx);
-    this.sprites = new List(objs);
-    if (this.spriteIdx === null && this.sprites.length() > 0) {
-        this.currentSprite = this.sprites.at(1);
-    } else if (this.spriteIdx === 0) {
-        this.currentSprite = this.stage;
-    } else {
-        this.currentSprite = this.sprites.at(this.spriteIdx) ||
-            this.stage;
-    }
+    this.currentSprite = this.stage;
     return this;
-};
-
-Scene.prototype.addDefaultSprite = function () {
-    var sprite = new SpriteMorph(this.globalVariables);
-    sprite.setPosition(
-        this.stage.center().subtract(
-            sprite.extent().divideBy(2)
-        )
-    );
-    this.stage.add(sprite);
-    this.sprites.add(sprite);
-    this.currentSprite = sprite;
-    return sprite;
 };
 
 Scene.prototype.captureGlobalSettings = function () {
@@ -185,10 +144,7 @@ Scene.prototype.captureGlobalSettings = function () {
     this.codeMappings = StageMorph.prototype.codeMappings;
     this.codeHeaders = StageMorph.prototype.codeHeaders;
     this.enableCodeMapping = StageMorph.prototype.enableCodeMapping;
-    this.enableInheritance = StageMorph.prototype.enableInheritance;
     this.enableSublistIDs = StageMorph.prototype.enableSublistIDs;
-    this.enablePenLogging = StageMorph.prototype.enablePenLogging;
-    this.useFlatLineEnds = SpriteMorph.prototype.useFlatLineEnds;
     this.enableLiveCoding = Process.prototype.enableLiveCoding;
     this.enableHyperOps = Process.prototype.enableHyperOps;
     this.customCategories = SpriteMorph.prototype.customCategories;
@@ -200,15 +156,8 @@ Scene.prototype.applyGlobalSettings = function () {
     StageMorph.prototype.codeMappings = this.codeMappings;
     StageMorph.prototype.codeHeaders = this.codeHeaders;
     StageMorph.prototype.enableCodeMapping = this.enableCodeMapping;
-    StageMorph.prototype.enableInheritance = this.enableInheritance;
     StageMorph.prototype.enableSublistIDs = this.enableSublistIDs;
-    StageMorph.prototype.enablePenLogging = this.enablePenLogging;
-    SpriteMorph.prototype.useFlatLineEnds = this.useFlatLineEnds;
     Process.prototype.enableLiveCoding = this.enableLiveCoding;
     Process.prototype.enableHyperOps = this.enableHyperOps;
     SpriteMorph.prototype.customCategories = this.customCategories;
-};
-
-Scene.prototype.updateTrash = function () {
-    this.trash = this.trash.filter(sprite => sprite.isCorpse);
 };
