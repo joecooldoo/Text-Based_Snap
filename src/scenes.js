@@ -112,7 +112,7 @@ function Scene(aScrollFrameMorph) {
     this.notes = '';
     this.globalVariables = aScrollFrameMorph ?
         aScrollFrameMorph.globalVariables() : new VariableFrame();
-    this.stage = aScrollFrameMorph || new ScrollFrameMorph(this.globalVariables);
+    this.stage = aScrollFrameMorph || new StageMorph(this.globalVariables);
     this.hasUnsavedEdits = false;
     this.unifiedPalette = true;
 
