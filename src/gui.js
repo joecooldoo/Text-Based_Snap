@@ -252,10 +252,7 @@ IDE_Morph.prototype.init = function (isAutoFill) {
 
     // editor
     this.globalVariables = this.scene.globalVariables;
-    this.currentSprite = this.scene.addDefaultSprite();
-    this.sprites = this.scene.sprites;
     this.currentCategory = this.scene.unifiedPalette ? 'unified' : 'control';
-    this.currentTab = 'scripts';
 
     // logoURL is disabled because the image data is hard-copied
     // to avoid tainting the world canvas
@@ -265,13 +262,8 @@ IDE_Morph.prototype.init = function (isAutoFill) {
     this.controlBar = null;
     this.categories = null;
     this.palette = null;
-    this.paletteHandle = null;
-    this.spriteBar = null;
     this.spriteEditor = null;
     this.stage = null;
-    this.stageHandle = null;
-    this.corralBar = null;
-    this.corral = null;
 
     this.embedPlayButton = null;
     this.embedOverlay = null;
