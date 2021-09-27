@@ -1440,7 +1440,7 @@ IDE_Morph.prototype.createPalette = function (forSearching) {
 	    */
 
     } else {
-        this.palette = this.currentSprite.palette(this.currentCategory);
+        this.palette = this.stage.palette(this.currentCategory);
     }
     this.palette.isDraggable = false;
     this.palette.acceptsDrops = true;
@@ -1478,8 +1478,6 @@ IDE_Morph.prototype.createPalette = function (forSearching) {
                 hand.grabOrigin.origin.lastDroppedBlock = droppedMorph;
                 hand.grabOrigin.origin.recordDrop(hand.grabOrigin);
             }
-            droppedMorph.perish(myself.isAnimating ? 200 : 0);
-        } else {
             droppedMorph.perish(myself.isAnimating ? 200 : 0);
         }
     };
