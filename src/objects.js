@@ -8839,7 +8839,7 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
         blocks.push(block('doSwitchToScene'));
 
         // for debugging: ///////////////
-        if (devMode) {
+        if (this.world().isDevMode) {
             blocks.push('-');
             blocks.push(this.devModeText());
             blocks.push('-');
