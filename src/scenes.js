@@ -1,52 +1,38 @@
 /*
-
     scenes.js
-
     multi-scene support for Snap!
-
     written by Jens Mönig
     jens@moenig.org
-
     Copyright (C) 2021 by Jens Mönig
-
     This file is part of Snap!.
-
     Snap! is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
     published by the Free Software Foundation, either version 3 of
     the License, or (at your option) any later version.
-
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
-
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-
     prerequisites:
     --------------
     needs morphic.js and objects.js
-
     toc
     ---
     the following list shows the order in which all constructors are
     defined. Use this list to locate code in this document:
-
     Project
     Scene
-
     credits
     -------
     scenes have been inspired by Ted Kaehlers's personal demos of HyperCard
     and many discussions with Ted about the design and practice of HyperCard,
     and by personal discussions with Wolfgang Slany about his design of
     scenes in Catrobat/PocketCode, which I love and admire.
-
 */
 
-/*global modules, VariableFrame, ScrollFrameMorph, SpriteMorph, Process, List,
+/*global modules, VariableFrame, StageMorph, SpriteMorph, Process, List,
 normalizeCanvas, SnapSerializer, Costume*/
 
 /*jshint esversion: 6*/
@@ -84,6 +70,9 @@ function Project(scenes, current) {
 
     // for deserializing - do not persist
     this.sceneIdx = null;
+
+    // for undeleting scenes - do not persist
+    this.trash = [];
 }
 
 Project.prototype.initialize = function () {
@@ -95,6 +84,7 @@ Project.prototype.initialize = function () {
 
 Project.prototype.addDefaultScene = function () {
     var scene = new Scene();
+    scene.addDefaultSprite();
     this.scenes.add(scene);
 };
 
@@ -107,14 +97,18 @@ Project.prototype.addDefaultScene = function () {
 
 // Scene instance creation:
 
-function Scene(aScrollFrameMorph) {
+function Scene(aStageMorph) {
     this.name = '';
     this.notes = '';
-    this.globalVariables = aScrollFrameMorph ?
-        aScrollFrameMorph.globalVariables() : new VariableFrame();
-    this.stage = aScrollFrameMorph || new StageMorph(this.globalVariables);
+    this.globalVariables = aStageMorph ?
+        aStageMorph.globalVariables() : new VariableFrame();
+    this.stage = aStageMorph || new StageMorph(this.globalVariables);
     this.hasUnsavedEdits = false;
     this.unifiedPalette = true;
+
+    // cached IDE state
+    this.sprites = new List();
+    this.currentSprite = null;
 
     // global settings (shared)
     this.hiddenPrimitives = {};
@@ -124,19 +118,52 @@ function Scene(aScrollFrameMorph) {
 
     // global settings (copied)
     this.enableCodeMapping = false;
+    this.enableInheritance = true;
     this.enableSublistIDs = false;
+    this.enablePenLogging = false;
+    this.useFlatLineEnds = false;
     this.enableLiveCoding = false;
     this.enableHyperOps = true;
 
     // for deserializing - do not persist
+    this.spritesDict = {};
     this.targetStage = null;
+    this.spriteIdx = null;
+
+    // for undeleting sprites - do not persist
+    this.trash = [];
 }
 
 Scene.prototype.initialize = function () {
     // initialize after deserializing
     // only to be called by store
-    this.currentSprite = this.stage;
+    var objs = this.stage.children.filter(
+        child => child instanceof SpriteMorph
+    );
+    objs.sort((x, y) => x.idx - y.idx);
+    this.sprites = new List(objs);
+    if (this.spriteIdx === null && this.sprites.length() > 0) {
+        this.currentSprite = this.sprites.at(1);
+    } else if (this.spriteIdx === 0) {
+        this.currentSprite = this.stage;
+    } else {
+        this.currentSprite = this.sprites.at(this.spriteIdx) ||
+            this.stage;
+    }
     return this;
+};
+
+Scene.prototype.addDefaultSprite = function () {
+    var sprite = new SpriteMorph(this.globalVariables);
+    sprite.setPosition(
+        this.stage.center().subtract(
+            sprite.extent().divideBy(2)
+        )
+    );
+    this.stage.add(sprite);
+    this.sprites.add(sprite);
+    this.currentSprite = sprite;
+    return sprite;
 };
 
 Scene.prototype.captureGlobalSettings = function () {
@@ -144,7 +171,10 @@ Scene.prototype.captureGlobalSettings = function () {
     this.codeMappings = StageMorph.prototype.codeMappings;
     this.codeHeaders = StageMorph.prototype.codeHeaders;
     this.enableCodeMapping = StageMorph.prototype.enableCodeMapping;
+    this.enableInheritance = StageMorph.prototype.enableInheritance;
     this.enableSublistIDs = StageMorph.prototype.enableSublistIDs;
+    this.enablePenLogging = StageMorph.prototype.enablePenLogging;
+    this.useFlatLineEnds = SpriteMorph.prototype.useFlatLineEnds;
     this.enableLiveCoding = Process.prototype.enableLiveCoding;
     this.enableHyperOps = Process.prototype.enableHyperOps;
     this.customCategories = SpriteMorph.prototype.customCategories;
@@ -156,8 +186,15 @@ Scene.prototype.applyGlobalSettings = function () {
     StageMorph.prototype.codeMappings = this.codeMappings;
     StageMorph.prototype.codeHeaders = this.codeHeaders;
     StageMorph.prototype.enableCodeMapping = this.enableCodeMapping;
+    StageMorph.prototype.enableInheritance = this.enableInheritance;
     StageMorph.prototype.enableSublistIDs = this.enableSublistIDs;
+    StageMorph.prototype.enablePenLogging = this.enablePenLogging;
+    SpriteMorph.prototype.useFlatLineEnds = this.useFlatLineEnds;
     Process.prototype.enableLiveCoding = this.enableLiveCoding;
     Process.prototype.enableHyperOps = this.enableHyperOps;
     SpriteMorph.prototype.customCategories = this.customCategories;
+};
+
+Scene.prototype.updateTrash = function () {
+    this.trash = this.trash.filter(sprite => sprite.isCorpse);
 };
