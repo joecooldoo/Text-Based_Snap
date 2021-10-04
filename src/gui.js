@@ -2250,8 +2250,14 @@ IDE_Morph.prototype.scrollPaletteToCategory = function (category) {
         this.refreshPalette();
         palette = this.palette;
     };
-    firstInCategory = palette.contents.children.find(block =>
-        block.category === category);
+    firstInCategory = palette.contents.children.find(
+    // prevent switching to "other" category
+    // going to WARP
+        (block) => block.category === category &&
+                          !['doWarp', 'reifyScript',
+			    'reifyReporter', 'reifyPredicate',
+			    'doDeclareVariables'].includes(block.selector)
+    );
 
     if (firstInCategory === undefined) {
         if (category === 'other') {
