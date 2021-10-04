@@ -1687,7 +1687,7 @@ SyntaxElementMorph.prototype.labelPart = function (spec) {
             break;
         case 'ring':
             part = new RingMorph();
-            part.color = SpriteMorph.prototype.blockColor.operators;
+            part.color = SpriteMorph.prototype.blockColor.other;
             part.selector = info.selector;
             part.setSpec(info.spec);
             part.isDraggable = true;
@@ -6574,7 +6574,7 @@ function RingMorph() {
 
 RingMorph.prototype.init = function () {
     RingMorph.uber.init.call(this);
-    this.category = 'operators';
+    this.category = 'other';
     this.contrast = RingMorph.prototype.contrast;
     this.setExtent(new Point(200, 80));
 };
@@ -6649,7 +6649,7 @@ RingMorph.prototype.embed = function (aBlock, inputNames, noVanish) {
     var slot;
 
     // set my color
-    this.color = SpriteMorph.prototype.blockColor.operators;
+    this.color = SpriteMorph.prototype.blockColor.other;
     this.isDraggable = true;
 
     // set my type, selector, and nested block:
