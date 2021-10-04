@@ -1100,19 +1100,19 @@ SpriteMorph.prototype.initBlocks = function () {
         // Operators
         reifyScript: {
             type: 'ring',
-            category: 'operators',
+            category: 'other',
             spec: '%rc %ringparms',
             alias: 'command ring lambda'
         },
         reifyReporter: {
             type: 'ring',
-            category: 'operators',
+            category: 'other',
             spec: '%rr %ringparms',
             alias: 'reporter ring lambda'
         },
         reifyPredicate: {
             type: 'ring',
-            category: 'operators',
+            category: 'other',
             spec: '%rp %ringparms',
             alias: 'predicate ring lambda'
         },
