@@ -160,7 +160,7 @@ CustomCommandBlockMorph, ToggleButtonMorph, DialMorph, SnapExtensions*/
 
 // Global stuff ////////////////////////////////////////////////////////
 
-modules.blocks = '2021-September-08';
+modules.blocks = '2021-October-07';
 
 var SyntaxElementMorph;
 var BlockMorph;
@@ -590,7 +590,7 @@ SyntaxElementMorph.prototype.labelParts = {
     },
     '%msgHat': {
         type: 'input',
-        tags: 'read-only',
+        tags: 'read-only static',
         menu: 'messagesReceivedMenu'
     },
     '%att': {
@@ -1045,6 +1045,7 @@ SyntaxElementMorph.prototype.labelParts = {
         label: (optional)
         tags: 'widget' // doesn't count as "empty" slot implicit parameter
         min: (optional) number of minimum inputs) or zero
+	max: (optional) number of maximum inputs) or zero
         defaults: (optional) number of visible slots to begin with or zero
     */
     '%inputs': {
@@ -1052,6 +1053,13 @@ SyntaxElementMorph.prototype.labelParts = {
         slots: '%s',
         label: 'with inputs',
         tags: 'widget'
+    },
+    '%send': {
+        type: 'multi',
+        slots: '%s',
+        label: 'and send',
+        tags: 'static',
+        max: 1
     },
     '%scriptVars': {
         type: 'multi',
@@ -1064,6 +1072,18 @@ SyntaxElementMorph.prototype.labelParts = {
         slots: '%t',
         label: 'block variables',
         tags: 'widget'
+    },
+    '%message': {
+        type: 'multi',
+        slots: '%t',
+        tags: 'widget',
+        max: 1
+    },
+    '%keyName': {
+        type: 'multi',
+        slots: '%t',
+        tags: 'widget',
+        max: 1
     },
     '%parms': {
         type: 'multi',
@@ -1733,6 +1753,7 @@ SyntaxElementMorph.prototype.labelPart = function (spec) {
                 info.min || 0,
                 spec
             );
+            part.maxInputs = info.max;
             for (i = 0; i < info.defaults || 0; i += 1) {
                 part.addInput();
             }
@@ -2867,11 +2888,6 @@ BlockMorph.prototype.userMenu = function () {
                         'check to prevent contents\nfrom being saved'
                     );
                 }
-            } else if (this.selector !== 'evaluateCustomBlock') {
-                menu.addItem(
-                    "hide",
-                    'hidePrimitive'
-                );
             }
 
             // allow toggling inheritable attributes
@@ -3279,25 +3295,6 @@ BlockMorph.prototype.developersMenu = function () {
         )
     );
     return menu;
-};
-
-BlockMorph.prototype.hidePrimitive = function () {
-    var ide = this.parentThatIsA(IDE_Morph),
-        dict,
-        cat;
-    if (!ide) {return; }
-    StageMorph.prototype.hiddenPrimitives[this.selector] = true;
-    dict = {
-        doWarp: 'control',
-        reifyScript: 'operators',
-        reifyReporter: 'operators',
-        reifyPredicate: 'operators',
-        doDeclareVariables: 'variables'
-    };
-    cat = dict[this.selector] || this.category;
-    if (cat === 'lists') {cat = 'variables'; }
-    ide.flushBlocksCache(cat);
-    ide.refreshPalette();
 };
 
 BlockMorph.prototype.isInheritedVariable = function (shadowedOnly) {
@@ -9277,6 +9274,7 @@ InputSlotMorph.prototype.keysMenu = function () {
         'down arrow': ['down arrow'],
         'right arrow': ['right arrow'],
         'left arrow': ['left arrow'],
+        enter: ['enter'],
         space : ['space'],
         '+' : ['+'],
         '-' : ['-'],
@@ -10537,7 +10535,7 @@ TemplateSlotMorph.prototype.contents = function () {
 
 TemplateSlotMorph.prototype.setContents = function (aString) {
     var tmp = this.template();
-    tmp.setSpec(aString);
+    tmp.setSpec(aString instanceof Array? localize(aString[0]) : aString);
     tmp.fixBlockColor(); // fix zebra coloring
     tmp.fixLabelColor();
 };
@@ -11639,6 +11637,7 @@ MultiArgMorph.prototype.init = function (
     this.slotSpec = slotSpec || '%s';
     this.labelText = localize(labelTxt || '');
     this.minInputs = min || 0;
+    this.maxInputs = null;
     this.elementSpec = eSpec || null;
     this.labelColor = labelColor || null;
     this.shadowColor = shadowColor || null;
@@ -11788,6 +11787,8 @@ MultiArgMorph.prototype.fixArrowsLayout = function () {
         rightArrow = arrows.children[1],
         inpCount = this.inputs().length,
         dim = new Point(rightArrow.width() / 2, rightArrow.height());
+    leftArrow.show();
+    rightArrow.show();
     if (inpCount < (this.minInputs + 1)) { // hide left arrow
         if (label) {
             label.hide();
@@ -11808,6 +11809,11 @@ MultiArgMorph.prototype.fixArrowsLayout = function () {
         rightArrow.show();
         rightArrow.setPosition(leftArrow.topCenter());
         arrows.bounds.corner = rightArrow.bottomRight().copy();
+        if (!isNil(this.maxInputs) && inpCount > this.maxInputs - 1) {
+            // hide right arrow
+            rightArrow.hide();
+            arrows.setExtent(dim);
+        }
     }
     arrows.rerender();
 };
@@ -11866,7 +11872,10 @@ MultiArgMorph.prototype.addInput = function (contents) {
         } else {
             newPart.setContents('#' + idx);
         }
-    }
+    } else if (this.elementSpec === '%message') {
+        newPart.setContents(localize('message'));
+    } else if (this.elementSpec === '%keyName') {
+        newPart.setContents(localize('key'));
     newPart.parent = this;
     this.children.splice(idx, 0, newPart);
     newPart.fixLayout();
