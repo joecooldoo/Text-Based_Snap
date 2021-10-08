@@ -36,7 +36,7 @@ make-variables.xml	Variables	Create and manage global/sprite/script variables in
 ~	~
 ~	~
 signada.xml	Signada	Interact with MicroBlocks devices via WiFi. Requires the device to have a TFT display, two buttons and WiFi capability, as well as the Signada MicroBlocks project loaded. The Citilab ED1 and a bunch of the M5Stack boards are some of the devices that work with Signada.
-~ ~
-~ ~
-~ ~
+~	~
+~	~
+~	~
 scriptBuilder	Script Builder	Programmically make and edit scripts, and attach them to your mouse. (You can make cursed scripts too!)
