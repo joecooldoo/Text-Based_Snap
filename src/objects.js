@@ -6253,7 +6253,7 @@ SpriteMorph.prototype.allHatBlocksFor = function (message) {
                 return event === message
                     || (event instanceof Array
                         && message !== '__shout__go__'
-                        && message !== '__clone__init__',
+                        && message !== '__clone__init__'
 		        && message !== '__scene__init__');
             }
             if (sel === 'receiveGo') {
