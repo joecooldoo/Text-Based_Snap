@@ -64,7 +64,7 @@ SnapExtensions, AlignmentMorph, TextMorph, Cloud*/
 
 /*jshint esversion: 6*/
 
-modules.threads = '2021-September-08';
+modules.threads = '2021-October-06';
 
 var ThreadManager;
 var Process;
@@ -1834,7 +1834,7 @@ Process.prototype.doShowVar = function (varName, context) {
         if (name.expression.selector === 'reportGetVar') {
             name = name.expression.blockSpec;
         } else {
-            this.doChangePrimitiveVisibility(name.expression, false);
+            this.blockReciever().changeBlockVisibility(name.expression, false);
             return;
         }
     }
@@ -1896,7 +1896,7 @@ Process.prototype.doHideVar = function (varName, context) {
         if (name.expression.selector === 'reportGetVar') {
             name = name.expression.blockSpec;
         } else {
-            this.doChangePrimitiveVisibility(name.expression, true);
+            this.blockReciever().changeBlockVisibility(name.expression, true);
             return;
         }
     }
@@ -1939,6 +1939,7 @@ Process.prototype.doRemoveTemporaries = function () {
     }
 };
 
+/* //commented out bc unused
 // Process hiding and showing primitives primitives :-)
 
 Process.prototype.doChangePrimitiveVisibility = function (aBlock, hideIt) {
@@ -1965,6 +1966,7 @@ Process.prototype.doChangePrimitiveVisibility = function (aBlock, hideIt) {
     ide.flushBlocksCache(cat);
     ide.refreshPalette();
 };
+*/
 
 // Process sprite inheritance primitives
 
@@ -3873,11 +3875,36 @@ Process.prototype.doBroadcast = function (message) {
         rcvrs.forEach(morph => {
             if (isSnapObject(morph)) {
                 morph.allHatBlocksFor(msg).forEach(block => {
-                    procs.push(stage.threads.startProcess(
+                    /*procs.push(stage.threads.startProcess(
                         block,
                         morph,
                         stage.isThreadSafe
-                    ));
+                    ));*/
+                    var varName, varFrame;
+                    if (block.selector === 'receiveMessage') {
+                        varName = block.inputs()[1].evaluate()[0];
+                        if (varName) {
+                            varFrame = new VariableFrame();
+                            varFrame.addVar(varName, message);
+                        }
+                        procs.push(stage.threads.startProcess(
+                            block,
+                            morph,
+                            stage.isThreadSafe,
+                            null, // exportResult (bool)
+                            null, // callback
+                            null, // isClicked
+                            null, // rightAway
+                            null, // atomic
+                            varFrame
+                        ));
+                    } else {
+                        procs.push(stage.threads.startProcess(
+                            block,
+                            morph,
+                            stage.isThreadSafe
+                        ));
+                    }
                 });
             }
         });
@@ -4894,12 +4921,14 @@ Process.prototype.goToLayer = function (name) {
 
 // Process scene primitives
 
-Process.prototype.doSwitchToScene = function (id) {
+Process.prototype.doSwitchToScene = function (id, transmission) {
     var rcvr = this.blockReceiver(),
         idx = 0,
+        message = transmission.at(1),
         ide, scenes, num, scene;
 
     this.assertAlive(rcvr);
+    this.assertType(message, ['text', 'number']);
     if (this.readyToTerminate || this.topBlock.selector === 'receiveOnScene') {
         // let the user press "stop" or "esc",
         // prevent "when this scene starts" hat blocks from directly
@@ -4932,7 +4961,7 @@ Process.prototype.doSwitchToScene = function (id) {
         }
         this.stop();
         // ide.onNextStep = () => // slow down scene switching, disabled for now
-        ide.switchToScene(scenes.at(idx));
+        ide.switchToScene(scenes.at(idx), null, message);
         return;
     }
 
@@ -4947,7 +4976,7 @@ Process.prototype.doSwitchToScene = function (id) {
 
     this.stop();
     // ide.onNextStep = () => // slow down scene switching, disabled for now
-    ide.switchToScene(scene);
+    ide.switchToScene(scene, null, message);
 };
 
 // Process color primitives
@@ -7172,18 +7201,20 @@ Context.prototype.isInCustomBlock = function () {
 
 // Variable /////////////////////////////////////////////////////////////////
 
-function Variable(value, isTransient) {
+function Variable(value, isTransient, isHidden) {
     this.value = value;
     this.isTransient = isTransient || false; // prevent value serialization
+    this.isHidden = isHidden || false; // not shown in the blocks palette
 }
 
 Variable.prototype.toString = function () {
-    return 'a ' + (this.isTransient ? 'transient ' : '') + 'Variable [' +
-        this.value + ']';
+    return 'a ' + (this.isTransient ? 'transient ' : '') +
+        (this.isHidden ? 'hidden ' : '') +
+        'Variable [' + this.value + ']';
 };
 
 Variable.prototype.copy = function () {
-    return new Variable(this.value, this.isTransient);
+    return new Variable(this.value, this.isTransient, this.isHidden);
 };
 
 // VariableFrame ///////////////////////////////////////////////////////
@@ -7332,17 +7363,19 @@ VariableFrame.prototype.deleteVar = function (name) {
 
 // VariableFrame tools
 
-VariableFrame.prototype.names = function () {
+VariableFrame.prototype.names = function (includeHidden) {
     var each, names = [];
     for (each in this.vars) {
         if (Object.prototype.hasOwnProperty.call(this.vars, each)) {
-            names.push(each);
+            if (!this.vars[each].isHidden || includeHidden) {
+                names.push(each);
+	    }
         }
     }
     return names;
 };
 
-VariableFrame.prototype.allNamesDict = function (upTo) {
+VariableFrame.prototype.allNamesDict = function (upTo, includeHidden) {
 	// "upTo" is an optional parent frame at which to stop, e.g. globals
     var dict = {}, current = this;
 
@@ -7350,7 +7383,9 @@ VariableFrame.prototype.allNamesDict = function (upTo) {
         var eachKey;
         for (eachKey in srcDict) {
             if (Object.prototype.hasOwnProperty.call(srcDict, eachKey)) {
-                trgtDict[eachKey] = eachKey;
+		if (!srcDict[eachKey].isHidden || includeHidden) {
+                    trgtDict[eachKey] = eachKey;
+		}
             }
         }
     }
@@ -7362,13 +7397,13 @@ VariableFrame.prototype.allNamesDict = function (upTo) {
     return dict;
 };
 
-VariableFrame.prototype.allNames = function (upTo) {
+VariableFrame.prototype.allNames = function (upTo, includeHidden) {
 /*
     only show the names of the lexical scope, hybrid scoping is
     reserved to the daring ;-)
 	"upTo" is an optional parent frame at which to stop, e.g. globals
 */
-    var answer = [], each, dict = this.allNamesDict(upTo);
+    var answer = [], each, dict = this.allNamesDict(upTo, includeHidden);
 
     for (each in dict) {
         if (Object.prototype.hasOwnProperty.call(dict, each)) {
