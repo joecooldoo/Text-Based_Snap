@@ -14242,7 +14242,7 @@ ScriptFocusMorph.prototype.processKeyEvent = function (event, action) {
         break;
     default:
         keyName = String.fromCharCode(event.keyCode || event.charCode);
-    }
+    };
     ctrl = (event.ctrlKey || event.metaKey) ? 'ctrl ' : '';
     shift = event.shiftKey ? 'shift ' : '';
     keyName = ctrl + shift + keyName;
@@ -14257,63 +14257,63 @@ ScriptFocusMorph.prototype.reactToKeyEvent = function (key) {
 
     // console.log(evt);
     switch (evt) {
-    case 'esc':
-        return this.stopEditing();
-    case 'enter':
-        return this.trigger();
-    case 'shift enter':
-        return this.newScript();
-    case 'ctrl shift enter':
-        return this.runScript();
-    case 'space':
-        return this.menu();
-    case 'left arrow':
-        return this.lastElement();
-    case 'shift left arrow':
-        return this.shiftScript(new Point(-shift, 0));
-    case 'right arrow':
-        return this.nextElement();
-    case 'shift right arrow':
-        return this.shiftScript(new Point(shift, 0));
-    case 'up arrow':
-        return this.lastCommand();
-    case 'shift up arrow':
-        return this.shiftScript(new Point(0, -shift));
-    case 'down arrow':
-        return this.nextCommand();
-    case 'shift down arrow':
-        return this.shiftScript(new Point(0, shift));
-    case 'tab':
-        return this.nextScript();
-    case 'shift tab':
-        return this.lastScript();
-    case 'backspace':
+        case 'esc':
+            return this.stopEditing();
+        case 'enter':
+            return this.trigger();
+        case 'shift enter':
+            return this.newScript();
+        case 'ctrl shift enter':
+            return this.runScript();
+        case 'space':
+            return this.menu();
+        case 'left arrow':
+            return this.lastElement();
+        case 'shift left arrow':
+            return this.shiftScript(new Point(-shift, 0));
+        case 'right arrow':
+            return this.nextElement();
+        case 'shift right arrow':
+            return this.shiftScript(new Point(shift, 0));
+        case 'up arrow':
+            return this.lastCommand();
+        case 'shift up arrow':
+            return this.shiftScript(new Point(0, -shift));
+        case 'down arrow':
+            return this.nextCommand();
+        case 'shift down arrow':
+            return this.shiftScript(new Point(0, shift));
+        case 'tab':
+            return this.nextScript();
+        case 'shift tab':
+            return this.lastScript();
+        case 'backspace':
         return this.deleteLastElement();
-    case 'ctrl z':
-        return this.undrop();
-    case 'ctrl y':
-    case 'ctrl shift z':
-        return this.redrop();
-    case 'ctrl [': // ignore the first press of the Mac cmd key
-        return;
-    default:
-        types = this.blockTypes();
-        if (!(this.element instanceof ScriptsMorph) &&
-                types && contains(types, 'reporter')) {
-            vNames = Object.keys(this.element.getVarNamesDict());
-        }
-        if (types) {
-            delete this.fps;
-            delete this.step;
-            this.show();
-            this.editor.scriptTarget().searchBlocks(
-                key,
-                types,
-                vNames,
-                this
-            );
-        }
-    }
+        case 'ctrl z':
+            return this.undrop();
+        case 'ctrl y':
+        case 'ctrl shift z':
+            return this.redrop();
+        case 'ctrl [': // ignore the first press of the Mac cmd key
+            return;
+        default:
+            types = this.blockTypes();
+            if (!(this.element instanceof ScriptsMorph) &&
+                    types && contains(types, 'reporter')) {
+                vNames = Object.keys(this.element.getVarNamesDict());
+            }
+            if (types) {
+                delete this.fps;
+                delete this.step;
+                this.show();
+                this.editor.scriptTarget().searchBlocks(
+                    key,
+                    types,
+                    vNames,
+                    this
+                );
+            };
+    };
 };
 
 
