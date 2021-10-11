@@ -82,11 +82,12 @@ VariableDialogMorph, HTMLCanvasElement, Context, List, RingMorph, HandleMorph,
 SpeechBubbleMorph, InputSlotMorph, isNil, FileReader, TableDialogMorph, String,
 BlockEditorMorph, BlockDialogMorph, PrototypeHatBlockMorph,  BooleanSlotMorph,
 localize, TableMorph, TableFrameMorph, normalizeCanvas, VectorPaintEditorMorph,
-AlignmentMorph, Process, WorldMap, copyCanvas, useBlurredShadows*/
+AlignmentMorph, Process, WorldMap, copyCanvas, useBlurredShadows,
+BlockVisibilityDialogMorph*/
 
 /*jshint esversion: 6*/
 
-modules.objects = '2021-September-08';
+modules.objects = '2021-October-08';
 
 var SpriteMorph;
 var StageMorph;
@@ -729,7 +730,7 @@ SpriteMorph.prototype.initBlocks = function () {
         receiveKey: {
             type: 'hat',
             category: 'control',
-            spec: 'when %keyHat key pressed',
+            spec: 'when %keyHat key pressed %keyName',
             defaults: [['space']]
         },
         receiveInteraction: {
@@ -741,7 +742,7 @@ SpriteMorph.prototype.initBlocks = function () {
         receiveMessage: {
             type: 'hat',
             category: 'control',
-            spec: 'when I receive %msgHat'
+            spec: 'when I receive %msgHat %message'
         },
         receiveCondition: {
             type: 'hat',
@@ -759,6 +760,7 @@ SpriteMorph.prototype.initBlocks = function () {
             spec: 'broadcast %msg and wait'
         },
         getLastMessage: {
+            dev: true,
             type: 'reporter',
             category: 'control',
             spec: 'message'
@@ -928,12 +930,12 @@ SpriteMorph.prototype.initBlocks = function () {
         receiveOnScene: {
             type: 'hat',
             category: 'control',
-            spec: 'when this scene starts'
+            spec: 'when switched to this scene %message'
         },
         doSwitchToScene: {
             type: 'command',
             category: 'control',
-            spec: 'switch to scene %scn',
+            spec: 'switch to scene %scn %send',
             defaults: [['next']]
         },
 
@@ -2426,14 +2428,17 @@ SpriteMorph.prototype.variableBlock = function (varName, isLocalTemplate) {
 
 // SpriteMorph block templates
 
-SpriteMorph.prototype.blockTemplates = function (category = 'motion') {
+SpriteMorph.prototype.blockTemplates = function (
+    category = 'control',
+    all = false // include hidden blocks
+) {
     var blocks = [], myself = this, varNames,
         inheritedVars = this.inheritedVariableNames(),
         wrld = this.world(),
         devMode = wrld && wrld.isDevMode;
 
     function block(selector, isGhosted) {
-        if (StageMorph.prototype.hiddenPrimitives[selector]) {
+        if (StageMorph.prototype.hiddenPrimitives[selector] && !all) {
             return null;
         }
         var newBlock = SpriteMorph.prototype.blockForSelector(selector, true);
@@ -2635,8 +2640,6 @@ SpriteMorph.prototype.blockTemplates = function (category = 'motion') {
         blocks.push(block('receiveMessage'));
         blocks.push(block('doBroadcast'));
         blocks.push(block('doBroadcastAndWait'));
-        blocks.push(watcherToggle('getLastMessage'));
-        blocks.push(block('getLastMessage'));
         blocks.push('-');
         blocks.push(block('doWarp'));
         blocks.push('-');
@@ -2674,6 +2677,9 @@ SpriteMorph.prototype.blockTemplates = function (category = 'motion') {
             blocks.push(block('doResumeAll'));
             blocks.push(block('doStep'));
             blocks.push(block('reportPaused'));
+            blocks.push('-');
+            blocks.push(watcherToggle('getLastMessage'));
+            blocks.push(block('getLastMessage'));
 	}
     } else if (category === 'IO') {
 
@@ -2766,7 +2772,7 @@ SpriteMorph.prototype.blockTemplates = function (category = 'motion') {
         }
         blocks.push('-');
 
-        varNames = this.reachableGlobalVariableNames(true);
+        varNames = this.reachableGlobalVariableNames(true, all);
         if (varNames.length > 0) {
             varNames.forEach(name => {
                 blocks.push(variableWatcherToggle(name));
@@ -2775,7 +2781,7 @@ SpriteMorph.prototype.blockTemplates = function (category = 'motion') {
             blocks.push('-');
         }
 
-        varNames = this.allLocalVariableNames(true);
+        varNames = this.allLocalVariableNames(true, all);
         if (varNames.length > 0) {
             varNames.forEach(name => {
                 blocks.push(variableWatcherToggle(name));
@@ -2943,13 +2949,18 @@ SpriteMorph.prototype.helpMenu = function () {
     return menu;
 };
 
-SpriteMorph.prototype.customBlockTemplatesForCategory = function (category) {
+SpriteMorph.prototype.customBlockTemplatesForCategory = function (
+    category,
+    includeHidden
+) {
     // returns an array of block templates for a selected category.
     var ide = this.parentThatIsA(IDE_Morph), blocks = [],
         isInherited = false, block, inheritedBlocks;
 
     function addCustomBlock(definition) {
-        if (!definition.isHelper && definition.category === category) {
+        if ((!definition.isHelper || includeHidden) &&
+	    definition.category === category)
+	{
             block = definition.templateInstance();
             if (isInherited) {block.ghost(); }
             blocks.push(block);
@@ -3106,8 +3117,8 @@ SpriteMorph.prototype.freshPalette = function (category) {
 
     // menu:
     palette.userMenu = function () {
-        var menu = new MenuMorph(),
-            ide = this.parentThatIsA(IDE_Morph),
+        var menu = new MenuMorph();
+            /*ide = this.parentThatIsA(IDE_Morph),
             more = {
                 operators:
                     ['reifyScript', 'reifyReporter', 'reifyPredicate'],
@@ -3135,7 +3146,7 @@ SpriteMorph.prototype.freshPalette = function (category) {
                         'doAddToList',
                         'doDeleteFromList',
                         'doInsertInList',
-                        'doReplaceInList'*/
+                        'doReplaceInList'*\/
                     ]
             };
 
@@ -3161,7 +3172,7 @@ SpriteMorph.prototype.freshPalette = function (category) {
                     any.selector
                 )
             );
-        }
+        }*/
 
         menu.addPair(
             [
@@ -3174,7 +3185,7 @@ SpriteMorph.prototype.freshPalette = function (category) {
             () => myself.searchBlocks(),
             '^F'
         );
-        if (canHidePrimitives()) {
+        /*if (canHidePrimitives()) {
             menu.addItem(
                 'hide primitives',
                 function () {
@@ -3212,7 +3223,11 @@ SpriteMorph.prototype.freshPalette = function (category) {
                     ide.refreshPalette();
                 }
             );
-        }
+        }*/
+        menu.addItem(
+            'hide blocks...',
+            () => new BlockVisibilityDialogMorph(myself).popUp(myself.world())
+        );
         menu.addLine();
         menu.addItem(
             'make a category...',
@@ -3300,6 +3315,67 @@ SpriteMorph.prototype.freshPalette = function (category) {
     palette.scrollX(palette.padding);
     palette.scrollY(palette.padding);
     return palette;
+};
+
+// SpriteMorph utilities for showing & hiding blocks in the palette
+
+SpriteMorph.prototype.allPaletteBlocks = function () {
+    // private - only to be used for showing & hiding blocks im the palette
+    var blocks = SpriteMorph.prototype.allCategories().reduce(
+        (blocks, category) => {
+            let primitives = this.blockTemplates(category, true),
+                customs = this.customBlockTemplatesForCategory(category, true);
+            return blocks.concat(
+                primitives,
+                customs
+            );
+        },
+        []
+    );
+    return blocks.filter(each => each instanceof BlockMorph);
+};
+
+SpriteMorph.prototype.isHidingBlock = function (aBlock) {
+    if (aBlock.isCustomBlock) {
+        return (
+            aBlock.isGlobal ? aBlock.definition
+                : this.getMethod(aBlock.semanticSpec)
+        ).isHelper;
+    }
+    if (aBlock.selector === 'reportGetVar') {
+        return this.variables.find(
+            aBlock.blockSpec
+        ).vars[aBlock.blockSpec].isHidden;
+    }
+    return StageMorph.prototype.hiddenPrimitives[aBlock.selector] === true;
+};
+
+SpriteMorph.prototype.changeBlockVisibility = function (aBlock, hideIt, quick) {
+    var ide, dict, cat;
+    if (aBlock.isCustomBlock) {
+        (aBlock.isGlobal ? aBlock.definition
+            : this.getMethod(aBlock.semanticSpec)
+        ).isHelper = !!hideIt;
+    } else if (aBlock.selector === 'reportGetVar') {
+        this.variables.find(
+            aBlock.blockSpec
+        ).vars[aBlock.blockSpec].isHidden = !!hideIt;
+    } else {
+        if (hideIt) {
+            StageMorph.prototype.hiddenPrimitives[aBlock.selector] = true;
+        } else {
+            delete StageMorph.prototype.hiddenPrimitives[aBlock.selector];
+        }
+    }
+    if (quick) {return; }
+    dict = {
+        reifyScript: 'operators',
+        reifyReporter: 'operators',
+        reifyPredicate: 'operators'
+    };
+    cat = dict[aBlock.selector] || aBlock.category;
+    ide.flushBlocksCache(cat);
+    ide.refreshPalette();
 };
 
 // SpriteMorph blocks searching
@@ -3426,7 +3502,8 @@ SpriteMorph.prototype.blocksMatching = function (
         }
     }
     blocks.sort((x, y) => x[1] < y[1] ? -1 : 1);
-    return blocks.map(each => each[0]);
+    blocks = blocks.map(each => each[0]);
+    return blocks.filter(each => !this.isHidingBlock(each));
 };
 
 SpriteMorph.prototype.searchBlocks = function (
@@ -3719,7 +3796,8 @@ SpriteMorph.prototype.reporterize = function (expressionString) {
                 inps[i - off].setContents(ast[i]);
             }
         }
-        block.isDraggable = true;
+        block.isDraggable = false;
+        block.isTemplate = true;
         block.fixLayout();
         block.fixBlockColor(null, true);
         return block;
@@ -4778,8 +4856,8 @@ SpriteMorph.prototype.write = function (text, size) {
     // thanks to Michael Ball for contributing this code!
     if (typeof text !== 'string' && typeof text !== 'number') {
         throw new Error(
-            'LABEL can only draw text or numbers, not a ' +
-            typeof text
+            'WRITE can only write text or numbers, not \'' +
+            typeof text + '\''
         );
     }
 
@@ -6167,22 +6245,24 @@ SpriteMorph.prototype.allSendersOf = function (message, receiverName, known) {
 SpriteMorph.prototype.allHatBlocksFor = function (message) {
     if (typeof message === 'number') { message = message.toString(); }
     return this.scripts.children.filter(morph => {
-        var event;
-        if (morph.selector) {
-            if (morph.selector === 'receiveMessage') {
+        var sel = morph.selector,
+	event;
+        if (sel) {
+            if (sel === 'receiveMessage') {
                 event = morph.inputs()[0].evaluate();
                 return event === message
                     || (event instanceof Array
                         && message !== '__shout__go__'
-                        && message !== '__clone__init__');
+                        && message !== '__clone__init__',
+		        && message !== '__scene__init__');
             }
-            if (morph.selector === 'receiveGo') {
+            if (sel === 'receiveGo') {
                 return message === '__shout__go__';
             }
-            if (morph.selector === 'receiveOnClone') {
+            if (sel === 'receiveOnClone') {
                 return message === '__clone__init__';
             }
-            if (morph.selector === 'receiveOnScene') {
+            if (sel === 'receiveOnScene') {
                 return message === '__scene__init__';
             }
         }
@@ -7248,16 +7328,16 @@ SpriteMorph.prototype.hasSpriteVariable = function (varName) {
     return contains(this.variables.names(), varName);
 };
 
-SpriteMorph.prototype.allLocalVariableNames = function (sorted) {
+SpriteMorph.prototype.allLocalVariableNames = function (sorted, all) {
     var exceptGlobals = this.globalVariables(),
-        globalNames = exceptGlobals.names(),
+        globalNames = exceptGlobals.names(all),
         data;
 
     function alphabetically(x, y) {
         return x.toLowerCase() < y.toLowerCase() ? -1 : 1;
     }
 
- 	data = this.variables.allNames(exceptGlobals).filter(each =>
+ 	data = this.variables.allNames(exceptGlobals, all).filter(each =>
 		!contains(globalNames, each)
     );
 	if (sorted) {
@@ -7266,15 +7346,16 @@ SpriteMorph.prototype.allLocalVariableNames = function (sorted) {
    return data;
 };
 
-SpriteMorph.prototype.reachableGlobalVariableNames = function (sorted) {
-    var locals = this.allLocalVariableNames(),
+SpriteMorph.prototype.reachableGlobalVariableNames = function (sorted, all) {
+    // "all" includes hidden ones in the palette
+    var locals = this.allLocalVariableNames(null, all),
     	data;
 
     function alphabetically(x, y) {
         return x.toLowerCase() < y.toLowerCase() ? -1 : 1;
     }
 
-	data = this.globalVariables().names().filter(each =>
+	data = this.globalVariables().names(all).filter(each =>
     	!contains(locals, each)
 	);
     if (sorted) {
@@ -8452,7 +8533,9 @@ StageMorph.prototype.processKeyEvent = function (event, action) {
             event.keyCode || event.charCode
         );
         if (event.ctrlKey || event.metaKey) {
-            keyName = 'ctrl ' + (event.shiftKey ? 'shift ' : '') + keyName;
+            keyName =
+                (keyName === 'Control' || keyName === 'Meta' ? '' : 'ctrl ') +
+                    (event.shiftKey ? 'shift ' : '') + keyName;
         }
     }
     action.call(this, keyName);
@@ -8503,13 +8586,28 @@ StageMorph.prototype.fireKeyEvent = function (key) {
     }
     this.children.concat(this).forEach(morph => {
         if (isSnapObject(morph)) {
-            morph.allHatBlocksForKey(evt).forEach(block =>
+            morph.allHatBlocksForKey(evt).forEach(block => {
+                var varName =  block.inputs()[1].evaluate()[0],
+                    varFrame;
+                if (varName) {
+                    varFrame = new VariableFrame();
+                    varFrame.addVar(
+                        varName,
+                        key === 'space' ? ' ' : key // not lowercased
+                    );
+                }
                 procs.push(this.threads.startProcess(
                     block,
                     morph,
-                    true // ignore running scripts, was: myself.isThreadSafe
-                ))
-            );
+                    true, // ignore running scripts, was: myself.isThreadSafe
+                    null, // exportResult (bool)
+                    null, // callback
+                    null, // isClicked
+                    null, // rightAway
+                    null, // atomic
+                    varFrame
+                ));
+            });
         }
     });
     return procs;
@@ -8526,18 +8624,30 @@ StageMorph.prototype.processKeyPress = function (event) {
 StageMorph.prototype.inspectKeyEvent
     = CursorMorph.prototype.inspectKeyEvent;
 
-StageMorph.prototype.fireChangeOfSceneEvent = function () {
+StageMorph.prototype.fireChangeOfSceneEvent = function (message) {
     var procs = [];
 
     this.children.concat(this).forEach(morph => {
         if (isSnapObject(morph)) {
-            morph.allHatBlocksFor('__scene__init__').forEach(block =>
+            morph.allHatBlocksFor('__scene__init__').forEach(block => {
+                var varName =  block.inputs()[0].evaluate()[0],
+                    varFrame;
+                if (varName) {
+                    varFrame = new VariableFrame();
+                    varFrame.addVar(varName, isNil(message) ? '' : message);
+                }
                 procs.push(this.threads.startProcess(
                     block,
                     morph,
-                    this.isThreadSafe
-                ))
-            );
+                    this.isThreadSafe,
+                    null, // exportResult (bool)
+                    null, // callback
+                    null, // isClicked
+                    null, // rightAway
+                    null, // atomic
+                    varFrame
+                ));
+            });
         }
     });
     return procs;
@@ -8651,11 +8761,14 @@ StageMorph.prototype.pauseGenericHatBlocks = function () {
 
 // StageMorph block templates
 
-StageMorph.prototype.blockTemplates = function (category = 'motion') {
+StageMorph.prototype.blockTemplates = function (
+    category = 'control',
+    all = false
+) {
     var blocks = [], myself = this, varNames, txt;
 
     function block(selector) {
-        if (myself.hiddenPrimitives[selector]) {
+        if (myself.hiddenPrimitives[selector] && !all) {
             return null;
         }
         var newBlock = SpriteMorph.prototype.blockForSelector(selector, true);
@@ -8731,11 +8844,6 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
         blocks.push(block('setEffect'));
         blocks.push(block('clearEffects'));
         blocks.push(block('getEffect'));
-        blocks.push('-');
-        blocks.push(block('show'));
-        blocks.push(block('hide'));
-        blocks.push(watcherToggle('reportShown'));
-        blocks.push(block('reportShown'));
 
         // for debugging: ///////////////
         if (this.world().isDevMode) {
@@ -8808,8 +8916,6 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
         blocks.push(block('receiveMessage'));
         blocks.push(block('doBroadcast'));
         blocks.push(block('doBroadcastAndWait'));
-        blocks.push(watcherToggle('getLastMessage'));
-        blocks.push(block('getLastMessage'));
         blocks.push('-');
         blocks.push(block('doWarp'));
         blocks.push('-');
@@ -8847,6 +8953,9 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
             blocks.push(block('doResumeAll'));
             blocks.push(block('doStep'));
             blocks.push(block('reportPaused'));
+            blocks.push('-');
+            blocks.push(watcherToggle('getLastMessage'));
+            blocks.push(block('getLastMessage'));
 	}
     } else if (category === 'IO') {
 
@@ -8942,7 +9051,7 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
         }
         blocks.push('-');
 
-        varNames = this.reachableGlobalVariableNames(true);
+        varNames = this.reachableGlobalVariableNames(true, all);
         if (varNames.length > 0) {
             varNames.forEach(name => {
                 blocks.push(variableWatcherToggle(name));
@@ -8951,7 +9060,7 @@ StageMorph.prototype.blockTemplates = function (category = 'motion') {
             blocks.push('-');
         }
 
-        varNames = this.allLocalVariableNames(true);
+        varNames = this.allLocalVariableNames(true, all);
         if (varNames.length > 0) {
             varNames.forEach(name => {
                 blocks.push(variableWatcherToggle(name));
@@ -9325,6 +9434,25 @@ StageMorph.prototype.palette = SpriteMorph.prototype.palette;
 StageMorph.prototype.freshPalette = SpriteMorph.prototype.freshPalette;
 StageMorph.prototype.blocksMatching = SpriteMorph.prototype.blocksMatching;
 StageMorph.prototype.searchBlocks = SpriteMorph.prototype.searchBlocks;
+
+// StageMorph utilities for showing & hiding blocks in the palette
+
+StageMorph.prototype.allPaletteBlocks
+    = SpriteMorph.prototype.allPaletteBlocks;
+
+StageMorph.prototype.isHidingBlock = SpriteMorph.prototype.isHidingBlock;
+
+StageMorph.prototype.changeBlockVisibility
+    = SpriteMorph.prototype.changeBlockVisibility;
+
+StageMorph.prototype.changePrimitiveVisibility
+    = SpriteMorph.prototype.changePrimitiveVisibility;
+
+StageMorph.prototype.changeCustomBlockVisibility
+    = SpriteMorph.prototype.changeCustomBlockVisibility;
+
+StageMorph.prototype.changeVarBlockVisibility
+    = SpriteMorph.prototype.changeVarBlockVisibility;
 
 // StageMorph neighbor detection
 
