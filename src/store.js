@@ -1936,10 +1936,6 @@ VariableFrame.prototype.toXML = function (serializer) {
             dta;
         if (transient || val === undefined || val === null) {
             dta = serializer.format(
-                '<variable name="@" transient="true"/>',
-                v)
-            ;
-        } else if (val === undefined || val === null) {
                 '<variable name="@"' +
                     (transient ? ' transient="true"' : '') +
                     (hidden ? ' hidden="true"' : '') +
