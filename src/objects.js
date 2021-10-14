@@ -87,7 +87,7 @@ BlockVisibilityDialogMorph*/
 
 /*jshint esversion: 6*/
 
-modules.objects = '2021-October-08';
+modules.objects = '2021-October-14';
 
 var SpriteMorph;
 var StageMorph;
@@ -3031,7 +3031,7 @@ SpriteMorph.prototype.makeBlock = function () {
     );
     if (category !== 'unified') {
         dlg.category = category;
-        dlg.categories.children.forEach(each => each.refresh());
+        dlg.categories.refresh();
         dlg.types.children.forEach(each => {
             each.setColor(clr);
             each.refresh();
