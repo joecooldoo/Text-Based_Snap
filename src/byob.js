@@ -108,7 +108,7 @@ WatcherMorph, XML_Serializer, SnapTranslator, SnapExtensions*/
 
 // Global stuff ////////////////////////////////////////////////////////
 
-modules.byob = '2021-October-07';
+modules.byob = '2021-October-14';
 
 // Declarations
 
@@ -1753,6 +1753,17 @@ BlockDialogMorph.prototype.init = function (target, action, environment) {
     this.categories = new BoxMorph();
     this.categories.color = SpriteMorph.prototype.paletteColor.lighter(8);
     this.categories.borderColor = this.categories.color.lighter(40);
+    this.categories.buttons = [];
+
+    this.categories.refresh = function () {
+        this.buttons.forEach(cat => {
+            cat.refresh();
+            if (cat.state) {
+                cat.scrollIntoView();
+            }
+        });
+    };
+
     this.createCategoryButtons();
     this.fixCategoriesLayout();
     this.add(this.categories);
@@ -1775,9 +1786,7 @@ BlockDialogMorph.prototype.openForChange = function (
     this.category = category;
     this.blockType = type;
 
-    this.categories.children.forEach(each =>
-        each.refresh()
-    );
+    this.categories.refresh()
     this.types.children.forEach(each => {
         each.setColor(clr);
         each.refresh();
@@ -1833,9 +1842,7 @@ BlockDialogMorph.prototype.addCategoryButton = function (category) {
         this, // this block dialog box is the target
         () => {
             this.category = category;
-            this.categories.children.forEach(each =>
-                each.refresh()
-            );
+            this.categories.refresh()
             if (this.types) {
                 this.types.children.forEach(each =>
                     each.setColor(colors[2])
@@ -1863,6 +1870,7 @@ BlockDialogMorph.prototype.addCategoryButton = function (category) {
     button.fixLayout();
     button.refresh();
     this.categories.add(button);
+    this.categories.buttons.push(button);
     return button;
 };
 
@@ -1882,9 +1890,7 @@ BlockDialogMorph.prototype.addCustomCategoryButton = function (category, clr) {
         this, // this block dialog box is the target
         () => {
             this.category = category;
-            this.categories.children.forEach(each =>
-                each.refresh()
-            );
+            this.categories.refresh()
             if (this.types) {
                 this.types.children.forEach(each =>
                     each.setColor(colors[2])
@@ -1924,24 +1930,30 @@ BlockDialogMorph.prototype.fixCategoriesLayout = function () {
         border = 10, // this.categories.border,
         l = this.categories.left(),
         t = this.categories.top(),
+	scroller,
         row,
-        col;
+        col,
+	i;
+
+    this.categories.setWidth(
+        3 * xPadding + 2 * buttonWidth
+    );
 
     this.categories.children.forEach((button, i) => {
-        if (i < 8) {
-            row = i % 4;
-            col = Math.ceil((i + 1) / 4);
-        } else if (i < 10) {
-            row = 4;
-            col = 10 - i;
+        if (i < 6) {
+            row = i % 3;
+            col = Math.ceil((i + 1) / 3);
+        } else if (i < 8) {
+            row = 3;
+            col = 8 - i;
         } else {
-            row = i - 5;
+            row = i - 4;
             col = 1;
         }
         button.setPosition(new Point(
             l + (col * xPadding + ((col - 1) * buttonWidth)),
             t + ((row + 1) * yPadding + (row * buttonHeight) + border) +
-                (i > 9 ? border / 2 : 0)
+                (i > 7 ? border / 2 : 0)
         ));
     });
 
@@ -1950,17 +1962,42 @@ BlockDialogMorph.prototype.fixCategoriesLayout = function () {
         this.categories.border = 0;
         this.categories.edge = 0;
     }
-    this.categories.setWidth(
-        3 * xPadding + 2 * buttonWidth
-    );
+    if (more > 6) {
+        scroller = new ScrollFrameMorph(
+            null,
+            null,
+            SpriteMorph.prototype.sliderColor.lighter()
+        );
+        scroller.setColor(this.categories.color);
+        scroller.acceptsDrops = false;
+        scroller.contents.acceptsDrops = false;
+        scroller.setPosition(
+            new Point(
+                this.categories.left() + this.categories.border,
+                this.categories.children[10].top()
+            )
+        );
+        scroller.setWidth(this.categories.width() - this.categories.border * 2);
+        scroller.setHeight(buttonHeight * 4 + yPadding * 3);
 
-    this.categories.setHeight(
-        (5 + 1) * yPadding
-            + 5 * buttonHeight
-            + (more ? (more * (yPadding + buttonHeight) + border / 2) : 0)
-            + 2 * border
-    );
-
+        for (i = 0; i < more; i += 1) {
+            scroller.addContents(this.categories.children[10]);
+        }
+        this.categories.add(scroller);
+        this.categories.setHeight(
+            (3 + 1) * yPadding
+                + 3 * buttonHeight
+                + 4 * (yPadding + buttonHeight) + border + 2
+                + 2 * border
+        );
+    } else {
+        this.categories.setHeight(
+            (3 + 1) * yPadding
+                + 3 * buttonHeight
+                + (more ? (more * (yPadding + buttonHeight) + border / 2) : 0)
+                + 2 * border
+        );
+    }
 };
 
 // type radio buttons
@@ -4592,6 +4629,7 @@ BlockVisibilityDialogMorph.prototype.hideBlocks = function () {
     }
     ide.flushBlocksCache();
     ide.refreshPalette();
+    ide.recordUnsavedChanges();
 };
 
 // BlockVisibilityDialogMorph layout
