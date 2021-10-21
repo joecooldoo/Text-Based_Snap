@@ -6085,7 +6085,7 @@ SpeechBubbleMorph.prototype.init = function (
     this.contents = contents || '';
     this.padding = padding || 0; // additional vertical pixels
     this.isThought = isThought || false; // draw "think" bubble
-    this.isClickable = false;
+    this.isClickable = true;
     SpeechBubbleMorph.uber.init.call(
         this,
         edge || 6,
@@ -6110,11 +6110,11 @@ SpeechBubbleMorph.prototype.popUp = function (world, pos, isClickable) {
     world.hand.destroyTemporaries();
     world.hand.temporaries.push(this);
 
-    if (!isClickable) {
+/*  if (!isClickable) {
         this.mouseEnter = this.destroy;
     } else {
         this.isClickable = true;
-    }
+    }*/
 };
 
 // SpeechBubbleMorph drawing:
