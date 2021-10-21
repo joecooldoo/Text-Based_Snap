@@ -768,7 +768,7 @@ SpriteMorph.prototype.initBlocks = function () {
         doSend: {
             type: 'command',
             category: 'control',
-            spec: 'send %msg to %spr'
+            spec: 'send %msg to %rcv'
         },
         doWait: {
             type: 'command',
@@ -800,8 +800,8 @@ SpriteMorph.prototype.initBlocks = function () {
         doFor: {
             type: 'command',
             category: 'control',
-            spec: 'for %upvar = %n to %n %cla',
-            defaults: ['i', 1, 10]
+            spec: 'for %upvar = %n to %n step %n %cla',
+            defaults: ['i', 1, 10, 1]
         },
         doIf: {
             type: 'command',
@@ -993,7 +993,7 @@ SpriteMorph.prototype.initBlocks = function () {
             type: 'command',
             category: 'IO',
             spec: 'ask %s and wait',
-            defaults: [localize('what\'s your name?')]
+            defaults: [localize('What\'s your name?')]
         },
         reportLastAnswer: { // retained for legacy compatibility
             dev: true,
@@ -1019,7 +1019,8 @@ SpriteMorph.prototype.initBlocks = function () {
         reportMouseDown: {
             type: 'predicate',
             category: 'IO',
-            spec: 'mouse down?'
+            spec: '%mouse mouse down?',
+            defaults: [['left']]
         },
         reportKeyPressed: {
             type: 'predicate',
@@ -1090,7 +1091,7 @@ SpriteMorph.prototype.initBlocks = function () {
             type: 'reporter',
 	    category: 'IO',
             spec: 'my %get',
-            defaults: [['neighbors']]
+            defaults: [['self']]
         },
         reportAudio: {
             type: 'reporter',
@@ -1155,7 +1156,7 @@ SpriteMorph.prototype.initBlocks = function () {
             spec: '%n ÷ %n',
             alias: '/'
         },
-        reportRound: {
+        reportRound: { //deprecated
             type: 'reporter',
             category: 'operators',
             spec: 'round %n'
@@ -1347,14 +1348,14 @@ SpriteMorph.prototype.initBlocks = function () {
             spec: 'JavaScript function ( %mult%s ) { %code }'
         },
         reportTypeOf: { // only in dev mode for debugging
-            dev: true,
+            //dev: true,
             type: 'reporter',
             category: 'operators',
             spec: 'type of %s',
             defaults: [5]
         },
         reportTextFunction: { // only in dev mode - experimental
-            dev: true,
+            //dev: true,
             type: 'reporter',
             category: 'operators',
             spec: '%txtfun of %s',
@@ -1375,7 +1376,7 @@ SpriteMorph.prototype.initBlocks = function () {
             spec: 'set %var to %s',
             defaults: [null, 0]
         },
-        doChangeVar: {
+        doChangeVar: { //deprecated
             type: 'command',
             category: 'variables',
             spec: 'change %var by %n',
@@ -1394,7 +1395,7 @@ SpriteMorph.prototype.initBlocks = function () {
         doDeclareVariables: {
             type: 'command',
             category: 'variables',
-            spec: 'script variables %scriptVars'
+            spec: 'let variables %scriptVars be %scriptVals'
         },
 
         // inheritance
@@ -1415,12 +1416,17 @@ SpriteMorph.prototype.initBlocks = function () {
             category: 'lists',
             spec: '%s in front of %l'
         },
-        reportListItem: {
+        reportListItem: { //deprecated
             type: 'reporter',
             category: 'lists',
             spec: 'item %idx of %l',
             defaults: [1]
         },
+	reportCAR: {
+	    type: 'reporter',
+            category: 'lists',
+	    spec: 'first of %l'
+	},
         reportCDR: {
             type: 'reporter',
             category: 'lists',
@@ -1487,6 +1493,18 @@ SpriteMorph.prototype.initBlocks = function () {
             spec: 'numbers from %n to %n',
             defaults: [1, 10]
         },
+	reportAscendingNumbers: {
+            type: 'reporter',
+            category: 'lists',
+            spec: 'numbers from %n to %n ascending',
+            defaults: [1, 10]
+	},
+	reportDescendingNumbers: {
+            type: 'reporter',
+            category: 'lists',
+            spec: 'numbers from %n to %n descending',
+            defaults: [10, 1]
+	},
     
         reportListCombination: {
             type: 'reporter',
@@ -1505,19 +1523,25 @@ SpriteMorph.prototype.initBlocks = function () {
             category: 'lists',
             spec: 'transpose %l'
         },
-        reportReshape: {
+        reportReshape: { //deprecated
             type: 'reporter',
             category: 'lists',
             spec: 'reshape %l to %nums',
             defaults: [null, [4, 3]]
         },
-    
-        reportSlice: {
+        reportSlice: { //deprecated
             type: 'reporter',
             category: 'lists',
             spec: 'slice %l by %nums',
             defaults: [null, [2, -1]]
         },
+
+	reportSliced: {
+            type: 'reporter',
+            category: 'lists',
+            spec: '%l %sliced %nums',
+            defaults: [null, ['reshaped to'], [2, -1]]
+	},
     
 
         // HOFs
@@ -1582,23 +1606,27 @@ SpriteMorph.prototype.initBlocks = function () {
 
         // Code mapping
         doMapCodeOrHeader: {
+            dev: true,
             type: 'command',
             category: 'other',
             spec: 'map %cmdRing to %codeKind %code',
             defaults: [null, ['code']]
         },
         doMapValueCode: {
+            dev: true,
             type: 'command',
             category: 'other',
             spec: 'map %mapValue to code %code',
             defaults: [['String'], '<#1>']
         },
         doMapListCode: {
+            dev: true,
             type: 'command',
             category: 'other',
             spec: 'map %codeListPart of %codeListKind to code %code'
         },
         reportMappedCode: {
+            dev: true,
             type: 'reporter',
             category: 'other',
             spec: 'code of %cmdRing'
@@ -1763,8 +1791,8 @@ SpriteMorph.prototype.initBlockMigrations = function () {
             offset: 1
         },
         reportDistanceTo: {
-        	selector: 'reportRelationTo',
-         	inputs: [['distance']],
+            selector: 'reportRelationTo',
+            inputs: [['distance']],
             offset: 1
         },
         comeToFront: {
@@ -2726,7 +2754,6 @@ SpriteMorph.prototype.blockTemplates = function (
         blocks.push(block('reportCommutativeOperator'));
         blocks.push(block('reportNonCommutativeOperator'));
         blocks.push('-');
-        blocks.push(block('reportRound'));
         blocks.push(block('reportMonadic'));
         blocks.push(block('reportRandom'));
         blocks.push('-');
@@ -2798,10 +2825,12 @@ SpriteMorph.prototype.blockTemplates = function (
 	
         blocks.push(block('reportNewList'));
         blocks.push(block('reportNumbers'));
+        blocks.push(block('reportAscendingNumbers'));
+        blocks.push(block('reportDescendingNumbers'));
         blocks.push('-');
         blocks.push(block('reportCONS'));
         blocks.push(block('reportCDR'));
-        blocks.push(block('reportListItem'));
+        blocks.push(block('reportCAR'));
         blocks.push(block('reportListIndex'));
         blocks.push(block('reportListAttribute'));
         blocks.push(block('reportListContainsItem'));
@@ -2815,8 +2844,7 @@ SpriteMorph.prototype.blockTemplates = function (
         blocks.push(block('doForEach'));
         blocks.push('-');
         blocks.push(block('reportListCombination'));
-        blocks.push(block('reportReshape'));
-	blocks.push(block('reportSlice'));
+	blocks.push(block('reportSliced'));
 
         // for debugging: ///////////////
         if (devMode) {
@@ -2824,6 +2852,8 @@ SpriteMorph.prototype.blockTemplates = function (
             blocks.push(this.devModeText());
             blocks.push('-');
             blocks.push(block('doShowTable'));
+            blocks.push('-');
+            blocks.push(block('reportListItem'));
 	}
 
     } else if (category === 'other') {
