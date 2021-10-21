@@ -64,7 +64,7 @@ SnapExtensions, AlignmentMorph, TextMorph, Cloud*/
 
 /*jshint esversion: 6*/
 
-modules.threads = '2021-October-19';
+modules.threads = '2021-October-21';
 
 var ThreadManager;
 var Process;
@@ -107,9 +107,10 @@ function snapEquals(a, b) {
     }
 
     // handle text comparison case-insensitive.
-    /*if (isString(x) && isString(y)) {
-        return x.toLowerCase() === y.toLowerCase();
-    }*/
+    if (isString(x) && isString(y)) {
+        return x.toUpperCase().toLowerCase() ===
+               y.toUpperCase().toLowerCase(); // toUpperCase used to turn, say, "ß" into "ss"
+    }
 
     return x === y;
 }
@@ -850,6 +851,7 @@ Process.prototype.reportCommutativeLogicGate = function (a, gate, b) {
     }
 };
 
+/*
 Process.prototype.reportOr = function (a, b) {
     return !!(a || b);
 };
@@ -868,8 +870,9 @@ Process.prototype.reportNand = function (a, b) {
 Process.prototype.reportXnor = function (a, b) {
     return !(!a ^ !b);
 };
+*/
 
-/*Process.prototype.reportOr = function (block) {
+Process.prototype.reportOr = function (block) {
     var inputs = this.context.inputs;
 
     if (inputs.length < 1) {
@@ -886,7 +889,7 @@ Process.prototype.reportXnor = function (a, b) {
     } else {
         // this.assertType(inputs[1], 'Boolean');
         if (this.flashContext()) {return; }
-        this.returnValueToParentContext(inputs[1] === true);
+        this.returnValueToParentContext(!!inputs[1]);
         this.popContext();
     }
 };
@@ -908,7 +911,7 @@ Process.prototype.reportAnd = function (block) {
     } else {
         // this.assertType(inputs[1], 'Boolean');
         if (this.flashContext()) {return; }
-        this.returnValueToParentContext(inputs[1] === true);
+        this.returnValueToParentContext(!!inputs[1]);
         this.popContext();
     }
 };
@@ -922,7 +925,7 @@ Process.prototype.reportXor = function (block) {
     } else {
         // this.assertType(inputs[1], 'Boolean');
         if (this.flashContext()) {return; }
-        this.returnValueToParentContext(inputs[0] !== inputs[1]);
+        this.returnValueToParentContext(!inputs[0] !== !inputs[1]);
         this.popContext();
     }
 };
@@ -944,7 +947,7 @@ Process.prototype.reportNor = function (block) {
     } else {
         // this.assertType(inputs[1], 'Boolean');
         if (this.flashContext()) {return; }
-        this.returnValueToParentContext(inputs[1] === false);
+        this.returnValueToParentContext(!inputs[1]);
         this.popContext();
     }
 };
@@ -966,7 +969,7 @@ Process.prototype.reportNand = function (block) {
     } else {
         // this.assertType(inputs[1], 'Boolean');
         if (this.flashContext()) {return; }
-        this.returnValueToParentContext(inputs[1] === false);
+        this.returnValueToParentContext(!inputs[1]);
         this.popContext();
     }
 };
@@ -980,10 +983,10 @@ Process.prototype.reportXnor = function (block) {
     } else {
         // this.assertType(inputs[1], 'Boolean');
         if (this.flashContext()) {return; }
-        this.returnValueToParentContext(inputs[0] === inputs[1]);
+        this.returnValueToParentContext(!inputs[0] === !inputs[1]);
         this.popContext();
     }
-};*/
+};
 
 Process.prototype.doReport = function (block) {
     var outer = this.context.outerContext;
@@ -1276,7 +1279,7 @@ Process.prototype.resetErrorHandling = function () {
 Process.prototype.resetErrorHandling();
 
 Process.prototype.errorObsolete = function () {
-    throw new Error('a custom block definition is missing');
+    throw new Error('This is an undefined block.\nPlease do not have undefined blocks\nin your scripts');
 };
 
 Process.prototype.errorBubble = function (error, element) {
@@ -3890,7 +3893,8 @@ Process.prototype.doBroadcast = function (message) {
                         procs.push(stage.threads.startProcess(
                             block,
                             morph,
-                            stage.isThreadSafe,
+                            stage.isThreadSafe || // make "any msg" threadsafe
+                                block.inputs()[0].evaluate() instanceof Array,
                             null, // exportResult (bool)
                             null, // callback
                             null, // isClicked
