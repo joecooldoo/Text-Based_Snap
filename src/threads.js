@@ -3953,17 +3953,79 @@ Process.prototype.getLastMessage = function () {
 };
 
 Process.prototype.doSend = function (message, target) {
-    var stage = this.homeContext.receiver.parentThatIsA(StageMorph);
-    this.doBroadcast(
-        new List(
-            [
-                message,
-                target instanceof List ? target :
-                    target === stage.name ? new List([stage]) :
-                        new List([target])
-            ]
-        )
-    );
+    var stage = this.homeContext.receiver.parentThatIsA(StageMorph),
+        thisObj,
+        msg = this.inputOption(message),
+        rcvrs,
+        procs = [];
+    if (!this.canBroadcast) {
+        return [];
+    }
+
+    // determine the receivers
+    thisObj = this.blockReceiver();
+    if (target instanceof Array && target[0] === 'all') {
+        rcvrs = stage.children.concat(stage);
+    } else if (isSnapObject(target)) {
+        rcvrs = [target];
+    } else if (isString(target)) {
+        // assume the string to be the name of a sprite or the stage
+        if (target === stage.name) {
+            rcvrs = [stage];
+        } else {
+            rcvrs = [this.getOtherObject(target, thisObj, stage)];
+        }
+    } else if (target instanceof List) {
+        // assume all elements to be sprites or sprite names
+        rcvrs = target.itemsArray().map(each =>
+            this.getOtherObject(each, thisObj, stage)
+        );
+    } else {
+        return; // abort
+    }
+    // transmit the message
+    if (msg !== '') {
+        stage.lastMessage = message; // retained for backwards compatibility
+        rcvrs.forEach(morph => {
+            if (isSnapObject(morph)) {
+                morph.allHatBlocksFor(msg).forEach(block => {
+                    var varName, varFrame;
+                    if (block.selector === 'receiveMessage') {
+                        varName = block.inputs()[1].evaluate()[0];
+                        if (varName) {
+                            varFrame = new VariableFrame();
+                            varFrame.addVar(varName, message);
+                        }
+                        procs.push(stage.threads.startProcess(
+                            block,
+                            morph,
+                            stage.isThreadSafe || // make "any msg" threadsafe
+                                block.inputs()[0].evaluate() instanceof Array,
+                            null, // exportResult (bool)
+                            null, // callback
+                            null, // isClicked
+                            null, // rightAway
+                            null, // atomic
+                            varFrame
+                        ));
+                    } else {
+                        procs.push(stage.threads.startProcess(
+                            block,
+                            morph,
+                            stage.isThreadSafe
+                        ));
+                    }
+                });
+            }
+        });
+        (stage.messageCallbacks[''] || []).forEach(callback =>
+            callback(msg) // for "any" message, pass it along as argument
+        );
+        (stage.messageCallbacks[msg] || []).forEach(callback =>
+            callback() // for a particular message
+        );
+    }
+    return procs;
 };
 
 // Process type inference
@@ -4932,7 +4994,14 @@ Process.prototype.doSwitchToScene = function (id, transmission) {
         ide, scenes, num, scene;
 
     this.assertAlive(rcvr);
-    this.assertType(message, ['text', 'number']);
+    this.assertType(message, ['text', 'number', 'list']);
+    if (message instanceof List && !message.canBeJSON()) {
+        // make sure only atomic items are inside the list
+        // don't actually encode the list as json, though
+        throw new Error(localize(
+            'can only send lists\nwith atomic data\nto another scene'
+        ));
+    }
     if (this.readyToTerminate || this.topBlock.selector === 'receiveOnScene') {
         // let the user press "stop" or "esc",
         // prevent "when this scene starts" hat blocks from directly
