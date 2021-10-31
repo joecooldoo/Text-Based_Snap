@@ -3,6 +3,11 @@
 
 [https://snap.berkeley.edu][snap]
 
+## Anouncement
+This is no longer being maintained by @WarpedWartWars.
+
+***
+
 **[Try Text-Based Snap<em>!</em> Now](https://warpedwartwars.github.io/Text-Based_Snap/snap.html)**
 
 a visual, blocks based programming language
