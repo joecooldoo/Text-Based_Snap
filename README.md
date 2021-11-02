@@ -13,8 +13,8 @@ This is no longer being maintained by @WarpedWartWars.
 a visual, blocks based programming language
 inspired by Scratch
 
-written by Jens Mönig, Brian Harvey, and WarpedWartWars
-jens@moenig.org, bh@cs.berkeley.edu, *none yet*
+written by Jens Mönig, Brian Harvey, WarpedWartWars, and joecooldoo
+jens@moenig.org, bh@cs.berkeley.edu, *none yet*, [@joecooldoo you decide how to contact you here]
 
 ## Text-Based Snap<em>!</em> Community
 
