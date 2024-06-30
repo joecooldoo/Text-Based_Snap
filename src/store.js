@@ -1963,48 +1963,6 @@ VariableFrame.prototype.toXML = function (serializer) {
     }, '');
 };
 
-// Watchers
-
-WatcherMorph.prototype.toXML = function (serializer) {
-    var isVar = this.target instanceof VariableFrame,
-        isList = this.currentValue instanceof List,
-        color = this.readoutColor,
-        position = this.parent ?
-                this.topLeft().subtract(this.parent.topLeft())
-                : this.topLeft();
-
-    if (this.isTemporary()) {
-        // do not save watchers on temporary variables
-        return '';
-    }
-    return serializer.format(
-        '<watcher% % style="@"% x="@" y="@" color="@,@,@"%%/>',
-        (isVar && this.target.owner) || (!isVar && this.target) ?
-                    serializer.format(' scope="@"',
-                        isVar ? this.target.owner.name : this.target.name)
-                            : '',
-        serializer.format(isVar ? 'var="@"' : 's="@"', this.getter),
-        this.style,
-        isVar && this.style === 'slider' ? serializer.format(
-                ' min="@" max="@"',
-                this.sliderMorph.start,
-                this.sliderMorph.stop
-            ) : '',
-        position.x,
-        position.y,
-        color.r,
-        color.g,
-        color.b,
-        !isList ? ''
-                : serializer.format(
-                ' extX="@" extY="@"',
-                this.cellMorph.contentsMorph.width(),
-                this.cellMorph.contentsMorph.height()
-            ),
-        this.isVisible ? '' : ' hidden="true"'
-    );
-};
-
 // Scripts
 
 ScriptsMorph.prototype.toXML = function (serializer) {

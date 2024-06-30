@@ -1501,17 +1501,11 @@ ListWatcherMorph.prototype.userMenu = function () {
 
 ListWatcherMorph.prototype.showTableView = function () {
     var view = this.parentThatIsA(
-        SpriteBubbleMorph,
         SpeechBubbleMorph,
         CellMorph
     );
     if (!view) {return; }
-    if (view instanceof SpriteBubbleMorph) {
-        view.contentsMorph.destroy();
-        view.contentsMorph = new TableFrameMorph(new TableMorph(this.list, 10));
-        view.contentsMorph.expand(this.extent());
-        view.parent.positionTalkBubble();
-    } else if (view instanceof SpeechBubbleMorph) {
+    if (view instanceof SpeechBubbleMorph) {
         view.contents = new TableFrameMorph(new TableMorph(this.list, 10));
         view.contents.expand(this.extent());
     } else { // watcher cell
@@ -1545,4 +1539,33 @@ ListWatcherMorph.prototype.show = function () {
 
 // ListWatcherMorph rendering:
 
-ListWatcherMorph.prototype.render = WatcherMorph.prototype.render;
+ListWatcherMorph.prototype.render = function (ctx) {
+    var gradient;
+    if (MorphicPreferences.isFlat || (this.edge === 0 && this.border === 0)) {
+        BoxMorph.uber.render.call(this, ctx);
+        return;
+    }
+    gradient = ctx.createLinearGradient(0, 0, 0, this.height());
+    gradient.addColorStop(0, this.color.lighter().toString());
+    gradient.addColorStop(1, this.color.darker().toString());
+    ctx.fillStyle = gradient;
+    ctx.beginPath();
+    this.outlinePath(
+        ctx,
+        Math.max(this.edge - this.border, 0),
+        this.border
+    );
+    ctx.closePath();
+    ctx.fill();
+    if (this.border > 0) {
+        gradient = ctx.createLinearGradient(0, 0, 0, this.height());
+        gradient.addColorStop(0, this.borderColor.lighter().toString());
+        gradient.addColorStop(1, this.borderColor.darker().toString());
+        ctx.lineWidth = this.border;
+        ctx.strokeStyle = gradient;
+        ctx.beginPath();
+        this.outlinePath(ctx, this.edge, this.border / 2);
+        ctx.closePath();
+        ctx.stroke();
+    }
+};
