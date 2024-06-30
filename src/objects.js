@@ -1395,7 +1395,7 @@ SpriteMorph.prototype.initBlocks = function () {
         doDeclareVariables: {
             type: 'command',
             category: 'variables',
-            spec: 'let variables %scriptVars be %scriptVals'
+            spec: 'let variables %scriptVars'
         },
 
         // inheritance
