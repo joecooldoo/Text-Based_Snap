@@ -494,6 +494,14 @@ SyntaxElementMorph.prototype.labelParts = {
             'cross product' : ['cross product']
         }
     },
+    '%sliced': {
+        type: 'input',
+        tags: 'read-only static',
+        menu: {
+            'reshaped to' : ['reshaped to'],
+            'sliced by' : ['sliced by']
+        }
+    },
     '%dim': {
         type: 'input',
         tags: 'numeric',
