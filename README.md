@@ -4,7 +4,7 @@
 [https://snap.berkeley.edu][snap]
 
 ## Anouncement
-This is no longer being maintained by @WarpedWartWars.
+~~This is no longer being maintained by @WarpedWartWars.~~ no longer the case (though maybe i (WWW) shouldn't be working on two mods of Snap<i>!</i> and a pseudo-browser for it all at once)
 
 ***
 
