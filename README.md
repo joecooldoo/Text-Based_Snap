@@ -8,7 +8,7 @@ This is no longer being maintained by @WarpedWartWars.
 
 ***
 
-**[Try Text-Based Snap<em>!</em> Now](https://warpedwartwars.github.io/Text-Based_Snap/snap.html)**
+**[Try Text-Based Snap<em>!</em> Now](https://joecooldoo.github.io/Text-Based_Snap/snap.html)**
 
 a visual, blocks based programming language
 inspired by Scratch
