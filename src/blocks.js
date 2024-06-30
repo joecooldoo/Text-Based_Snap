@@ -575,12 +575,14 @@ SyntaxElementMorph.prototype.labelParts = {
     },
     '%key': {
         type: 'input',
-        tags: 'read-only',
         menu: 'keysMenu'
     },
-    '%keyHat': {
+    '%mouse': {
         type: 'input',
-        tags: 'read-only static',
+        menu: 'mouseMenu'
+    },
+    '%keyHat': { // should replace with %key but not now
+        type: 'input',
         menu: 'keysMenu'
     },
     '%msg': {
@@ -9325,6 +9327,15 @@ InputSlotMorph.prototype.keysMenu = function () {
         '7' : ['7'],
         '8' : ['8'],
         '9' : ['9']
+    };
+};
+
+InputSlotMorph.prototype.mouseMenu = function () {
+    return {
+        'any' : ['any'],
+        'left': ['left'],
+        'middle': ['middle'],
+        'right': ['right']
     };
 };
 
