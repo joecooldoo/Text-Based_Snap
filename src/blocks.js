@@ -1123,20 +1123,10 @@ SyntaxElementMorph.prototype.labelParts = {
     },
     // special case for the commutative operator,
     // which only needs one slot by default
-    '%osns': {
-        type: 'multi',
-        slots: '%n',
-        defaults: 1
-    },
     '%bools': {
         type: 'multi',
         slots: '%b',
-        defaults: 1
-    },
-    '%strs': {
-        type: 'multi',
-        slots: '%s',
-        defaults: 1
+        defaults: 2
     },
     '%exp': {
         type: 'multi',
@@ -1531,7 +1521,7 @@ SyntaxElementMorph.prototype.definesScriptVariable = function (name) {
 SyntaxElementMorph.prototype.selectForEdit = function () {
     var scripts = this.parentThatIsA(ScriptsMorph),
         ide = this.parentThatIsA(IDE_Morph),
-        rcvr = ide ? ide.currentSprite : null,
+        rcvr = ide ? ide.stage : null,
         selected;
     if (scripts && rcvr && rcvr.inheritsAttribute('scripts')) {
         // copy on write:
@@ -2288,7 +2278,7 @@ SyntaxElementMorph.prototype.showBubble = function (value, exportPic, target) {
         );
     } else if (value === null) {
         morphToShow = new TextMorph(
-            '',
+            'null',
             this.fontSize
         );
     } else if (value === 0) {
@@ -2301,25 +2291,6 @@ SyntaxElementMorph.prototype.showBubble = function (value, exportPic, target) {
             value.toString(),
             this.fontSize
         );
-    }
-    if (ide && (ide.currentSprite !== target)) {
-        if (target instanceof StageMorph) {
-            anchor = ide.corral.stageIcon;
-        } else if (target) {
-        	if (target.isTemporary) {
-         		target = detect(
-					target.allExemplars(),
-     				each => !each.isTemporary
-         		);
-     		}
-            anchor = detect(
-                ide.corral.frame.contents.children,
-                icon => icon.object === target
-            );
-        } else {
-        	target = ide;
-        }
-        pos = anchor.center();
     }
     bubble = new SpeechBubbleMorph(
         morphToShow,
@@ -2335,9 +2306,7 @@ SyntaxElementMorph.prototype.showBubble = function (value, exportPic, target) {
     if (exportPic) {
         this.exportPictureWithResult(bubble);
     }
-    if (anchor instanceof SpriteIconMorph) {
-        bubble.keepWithin(ide.corral);
-    } else if (sf) {
+    if (sf) {
         bubble.keepWithin(sf);
     }
 };
@@ -2673,7 +2642,7 @@ BlockMorph.prototype.scriptTarget = function () {
     }
     ide = this.parentThatIsA(IDE_Morph);
     if (ide) {
-        return ide.currentSprite;
+        return ide.stage;
     }
     throw new Error('script target cannot be found for orphaned block');
 };
@@ -7730,7 +7699,7 @@ ScriptsMorph.prototype.mouseClickLeft = function (pos) {
 
 ScriptsMorph.prototype.selectForEdit = function () {
     var ide = this.parentThatIsA(IDE_Morph),
-        rcvr = ide ? ide.currentSprite : null;
+        rcvr = ide ? ide.stage : null;
     if (rcvr && rcvr.inheritsAttribute('scripts')) {
         // copy on write:
         this.feedbackMorph.destroy();
@@ -7790,7 +7759,7 @@ ScriptsMorph.prototype.scriptTarget = function () {
     //  and a sprite.
     var editor = this.parentThatIsA(IDE_Morph);
     if (editor) {
-        return editor.currentSprite;
+        return editor.stage;
     }
     editor = this.parentThatIsA(BlockEditorMorph);
     if (editor) {
