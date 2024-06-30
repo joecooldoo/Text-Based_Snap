@@ -11898,6 +11898,7 @@ MultiArgMorph.prototype.addInput = function (contents) {
         newPart.setContents(localize('message'));
     } else if (this.elementSpec === '%keyName') {
         newPart.setContents(localize('key'));
+    }
     newPart.parent = this;
     this.children.splice(idx, 0, newPart);
     newPart.fixLayout();
